@@ -57,13 +57,9 @@ ln -sf ../man8/wtmpdb.8 %{buildroot}%{_mandir}/man1/last.1
 %post
 %tmpfiles_create_package %{name} %{_tmpfilesdir}/wtmpdb.conf
 %systemd_post wtmpdb-update-boot.service wtmpdb-rotate.timer wtmpdbd.socket
-pam-config -a --wtmpdb --wtmpdb-skip_if=sshd
 /sbin/ldconfig
 
 %postun
-if [ "$1" -eq 0 ]; then
-    pam-config -d --wtmpdb
-fi
 %systemd_postun wtmpdb-update-boot.service wtmpdb-rotate.timer wtmpdbd.socket
 /sbin/ldconfig
 
