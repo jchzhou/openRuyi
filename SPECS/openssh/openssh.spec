@@ -12,7 +12,7 @@
 %bcond xorg 0
 
 Name:           openssh
-Version:        10.0p1
+Version:        10.2p1
 Release:        %autorelease
 Summary:        An open source implementation of SSH protocol version 2
 License:        BSD-3-Clause AND BSD-2-Clause AND ISC AND SSH-OpenSSH AND ssh-keyscan AND sprintf AND LicenseRef-Fedora-Public-Domain AND X11-distribute-modifications-variant
