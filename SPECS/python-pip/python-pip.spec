@@ -67,6 +67,8 @@ BuildRequires:  python3-setuptools
 %if %{without bash}
 BuildRequires:  bash-completion
 %endif
+BuildRequires:  ca-certificates
+Requires:       ca-certificates
 # Virtual provides for the packages bundled by pip:
 %{bundled 3}
 Provides:       pip = %{version}-%{release}
@@ -79,6 +81,7 @@ Packages" or "Pip Installs Python".
 
 %package     -n %{python_wheel_pkg_prefix}-%{srcname}-wheel
 Summary:        The pip wheel
+Requires:       ca-certificates
 # Virtual provides for the packages bundled by pip:
 %{bundled 3}
 
