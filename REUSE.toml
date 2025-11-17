@@ -5,6 +5,7 @@ path = [
         "**.diff",
 	"**.tmpfiles",
 	"**.sysusers",
+	"**.sysconfig",
 	"**.service",
 	"**.timer",
 	"**/_multibuild",
