@@ -234,6 +234,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %attr(0755,root,root) %{_sbindir}/mkhomedir_helper
 %attr(0755,root,root) %{_sbindir}/pwhistory_helper
+%{_pam_libdir}/libpam.so.0*
+%{_pam_libdir}/libpamc.so.0*
+%{_pam_libdir}/libpam_misc.so.0*
 %dir %{_pam_moduledir}
 %{_pam_moduledir}/pam_access.so
 %{_pam_moduledir}/pam_canonicalize_user.so
@@ -317,9 +320,6 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libpam.so
 %{_libdir}/libpamc.so
 %{_libdir}/libpam_misc.so
-%{_pam_libdir}/libpam.so.0*
-%{_pam_libdir}/libpamc.so.0*
-%{_pam_libdir}/libpam_misc.so.0*
 %{_libdir}/pkgconfig/pam.pc
 %{_libdir}/pkgconfig/pam_misc.pc
 %{_libdir}/pkgconfig/pamc.pc
