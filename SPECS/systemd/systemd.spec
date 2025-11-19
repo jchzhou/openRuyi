@@ -54,6 +54,7 @@ License:        LGPL-2.1-or-later AND MIT AND GPL-2.0-or-later
 URL:            https://systemd.io
 #!RemoteAsset
 Source0:        https://github.com/systemd/systemd/archive/v%{version}/%{name}-%{version}.tar.gz
+Patch0:         0001-cryptsetup-util-move-definition-of-crypt_token_max.patch
 # These are essential files
 Source1:        systemd-user
 BuildSystem:    meson
@@ -81,6 +82,8 @@ BuildOption(conf):  -Dblkid=enabled
 BuildOption(conf):  -Dopenssl=enabled
 BuildOption(conf):  -Dp11kit=%{?with_bootstrap:disabled}%{!?with_bootstrap:enabled}
 BuildOption(conf):  -Dgcrypt=disabled
+BuildOption(conf):  -Dxenctrl=disabled
+BuildOption(conf):  -Dglib=disabled
 BuildOption(conf):  -Delfutils=enabled
 BuildOption(conf):  -Dlibcryptsetup=%{?with_bootstrap:disabled}%{!?with_bootstrap:enabled}
 BuildOption(conf):  -Drepart=enabled
@@ -262,6 +265,20 @@ Requires:       %{name}-shared = %{version}-%{release}
 
 %description    sysusers
 This package contains the systemd-sysusers program.
+
+%if %{without bootstrap}
+%package        cryptsetup
+Summary:        systemd-cryptsetup programs
+
+%description    cryptsetup
+This package contains the systemd-cryptsetup programs.
+
+%package        homed
+Summary:        systemd-homed programs
+
+%description    homed
+This package contains the homed programs.
+%endif
 
 %package        devel
 Summary:        Development headers for systemd
@@ -1179,6 +1196,15 @@ fi
 %{_bindir}/systemd-nspawn
 %{_prefix}/lib/tmpfiles.d/systemd-nspawn.conf
 %{_datadir}/bash-completion/completions/systemd-nspawn
+%if %{without bootstrap}
+%{_bindir}/systemd-vmspawn
+%{_bindir}/importctl
+%{_datadir}/bash-completion/completions/systemd-vmspawn
+%{_datadir}/bash-completion/completions/importctl
+%{_datadir}/dbus-1/system-services/org.freedesktop.import1.service
+%{_datadir}/dbus-1/system.d/org.freedesktop.import1.conf
+%{_datadir}/polkit-1/actions/org.freedesktop.import1.policy
+%endif
 %if %{with docs}
 %{_mandir}/man1/machinectl.1.gz
 %{_mandir}/man1/portablectl.1.gz
@@ -1272,6 +1298,9 @@ fi
 %{_datadir}/dbus-1/system.d/org.freedesktop.network1.conf
 %dir %{_datadir}/polkit-1/actions
 %{_datadir}/polkit-1/actions/org.freedesktop.network1.policy
+%if %{without bootstrap}
+%{_datadir}/polkit-1/rules.d/systemd-networkd.rules
+%endif
 %dir %{_datadir}/bash-completion/completions
 %{_datadir}/bash-completion/completions/networkctl
 %dir %{_datadir}/zsh/site-functions
@@ -1288,6 +1317,26 @@ fi
 %endif
 
 %files oomd-defaults
+
+%if %{without bootstrap}
+%files cryptsetup
+%{_bindir}/systemd-cryptenroll
+%{_bindir}/systemd-cryptsetup
+%dir %{_datadir}/bash-completion/completions
+%{_datadir}/bash-completion/completions/systemd-cryptenroll
+%{_libdir}/cryptsetup/libcryptsetup-token-systemd-pkcs11.so
+
+%files homed
+%{_bindir}/homectl
+%{_bindir}/systemd-home-fallback-shell
+%{_datadir}/bash-completion/completions/homectl
+%dir %{_datadir}/dbus-1/system-services
+%{_datadir}/dbus-1/system-services/org.freedesktop.home1.service
+%dir %{_datadir}/dbus-1/system.d
+%{_datadir}/dbus-1/system.d/org.freedesktop.home1.conf
+%dir %{_datadir}/polkit-1/actions
+%{_datadir}/polkit-1/actions/org.freedesktop.home1.policy
+%endif
 
 %changelog
 %{?autochangelog}

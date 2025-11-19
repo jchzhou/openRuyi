@@ -1,0 +1,48 @@
+From a60495c44b5378c25f4e16962a72e064fdbd9345 Mon Sep 17 00:00:00 2001
+From: Yu Watanabe <watanabe.yu+github@gmail.com>
+Date: Sun, 8 Jun 2025 09:55:08 +0900
+Subject: [PATCH] cryptsetup-util: move definition of crypt_token_max()
+
+As it uses streq(), but string-util.h is not included in the header.
+---
+ src/shared/cryptsetup-util.c | 6 ++++++
+ src/shared/cryptsetup-util.h | 6 +-----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/shared/cryptsetup-util.c b/src/shared/cryptsetup-util.c
+index e45e8431bc..b8281679dc 100644
+--- a/src/shared/cryptsetup-util.c
++++ b/src/shared/cryptsetup-util.c
+@@ -54,6 +54,12 @@ DLSYM_PROTOTYPE(crypt_token_json_get) = NULL;
+ DLSYM_PROTOTYPE(crypt_token_json_set) = NULL;
+ #if HAVE_CRYPT_TOKEN_MAX
+ DLSYM_PROTOTYPE(crypt_token_max) = NULL;
++#else
++int crypt_token_max(_unused_ const char *type) {
++    assert(streq(type, CRYPT_LUKS2));
++
++    return 32;
++}
+ #endif
+ #if HAVE_CRYPT_TOKEN_SET_EXTERNAL_PATH
+ DLSYM_PROTOTYPE(crypt_token_set_external_path) = NULL;
+diff --git a/src/shared/cryptsetup-util.h b/src/shared/cryptsetup-util.h
+index 6ecc8f601f..df897c208f 100644
+--- a/src/shared/cryptsetup-util.h
++++ b/src/shared/cryptsetup-util.h
+@@ -56,11 +56,7 @@ extern DLSYM_PROTOTYPE(crypt_token_json_set);
+ extern DLSYM_PROTOTYPE(crypt_token_max);
+ #else
+ /* As a fallback, use the same hard-coded value libcryptsetup uses internally. */
+-static inline int crypt_token_max(_unused_ const char *type) {
+-    assert(streq(type, CRYPT_LUKS2));
+-
+-    return 32;
+-}
++int crypt_token_max(_unused_ const char *type);
+ #define sym_crypt_token_max(type) crypt_token_max(type)
+ #endif
+ #if HAVE_CRYPT_TOKEN_SET_EXTERNAL_PATH
+-- 
+2.51.2
+
