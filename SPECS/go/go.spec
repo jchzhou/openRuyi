@@ -45,12 +45,14 @@ Release:        %autorelease
 Summary:        The Go Programming Language toolchain
 License:        BSD-3-Clause
 URL:            https://go.dev/
+VCS:            git:https://github.com/golang/go
 #!RemoteAsset
 Source0:        https://go.dev/dl/%{name}%{version}.src.tar.gz
 %if %{with bootstrap}
 #!RemoteAsset
 Source1:        https://go.dev/dl/%{name}%{version}.linux-%{gohostarch}.tar.gz
 %endif
+
 # Bootstrap from a pre-existing Go compiler.
 %if %{without bootstrap}
 BuildRequires:  go
@@ -60,35 +62,40 @@ BuildRequires:  gcc, make
 Provides:       golang = %{version}-%{release}
 Recommends:     %{name}-cshared = %{version}-%{release}
 Requires:       glibc
+
 %description
 The Go Programming Language. This package contains the compiler, tools,
 and standard library sources necessary for developing Go applications.
 
-%package doc
+%package        doc
 Summary:        Go language documentation
 BuildArch:      noarch
-%description doc
+
+%description    doc
 Contains the complete offline HTML documentation for the Go language.
 
-%package tests
+%package        tests
 Summary:        Go toolchain and standard library test suite
 BuildArch:      noarch
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-%description tests
+
+%description    tests
 Contains the upstream test suite for Go, useful for toolchain validation.
 
 %if %{with shared}
-%package shared
+%package        shared
 Summary:        shared libraries for the Go standard library
-%description cshared
+
+%description    shared
 Contains shared-object (.so) versions of the Go standard library.
 %endif
 
 %if %{with race}
-%package race
+%package        race
 Summary:        Race detector enabled standard library for Go
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-%description race
+
+%description    race
 Contains the Go standard library pre-compiled with race detector support.
 %endif
 
