@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Icenowy Zheng <uwu@icenowy.me>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+Name:           xcb-util-keysyms
+Version:        0.4.1
+Release:        %autorelease
+Summary:        X Fixes library
+License:        MIT
+URL:            https://www.x.org/
+#!RemoteAsset
+Source0:         https://www.x.org/archive/individual/lib/%{name}-%{version}.tar.xz
+
+BuildSystem:    autotools
+BuildOption(conf): --disable-static
+
+BuildRequires:  pkgconfig(xcb) >= 1.4
+BuildRequires:  pkgconfig(xproto) >= 7.0.8
+
+%description
+XCB utility library for translating keysyms.
+
+%package devel
+Summary:        Development files for %{name}
+Requires:       %{name} = %{version}-%{release}
+Requires:       pkgconfig
+
+%description devel
+%{name} development package
+
+%ldconfig_scriptlets
+
+%files
+%license COPYING
+%doc NEWS
+%{_libdir}/libxcb-keysyms.so.*
+
+%files devel
+%{_includedir}/xcb/xcb_keysyms.h
+%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libxcb-keysyms.so
+
+%changelog
+%{?autochangelog}
