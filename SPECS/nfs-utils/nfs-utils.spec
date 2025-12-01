@@ -35,7 +35,7 @@ BuildOption(conf):  --disable-sbin-override
 BuildOption(conf):  --with-pluginpath=%{_libdir}/libnfsidmap
 BuildOption(conf):  --enable-mountconfig
 
-BuildRequires:  e2fsprogs gcc-c++ libtool pkgconfig  sysuser-tools glibc-devel rpcgen
+BuildRequires:  e2fsprogs gcc-c++ libtool pkgconfig glibc-devel rpcgen
 BuildRequires:  pkgconfig(kdb) pkgconfig(krb5) pkgconfig(libcap) pkgconfig(libevent)
 BuildRequires:  pkgconfig(libkeyutils) pkgconfig(libnl-3.0) pkgconfig(libtirpc)
 BuildRequires:  pkgconfig(libxml-2.0) pkgconfig(mount) pkgconfig(readline)
@@ -50,7 +50,7 @@ the NFS kernel server utilities.
 %package     -n nfs-client
 Summary:        Support Utilities for NFS Client
 Requires:       keyutils netcfg rpcbind system-user-nobody
-%sysusers_requires
+Requires(pre):  systemd-sysusers
 
 %description -n nfs-client
 This package contains common NFS utilities which are needed for an NFS client.
@@ -80,9 +80,6 @@ This package contains header files for the NFSv4 ID Mapping Library.
 %conf -p
 autoreconf -fiv
 
-%build -p
-%sysusers_generate_pre %{SOURCE3} statd statd-user.sysusers
-
 %install -a
 install -d %{buildroot}%{_sysusersdir}
 install -m 644 %{SOURCE3} %{buildroot}%{_sysusersdir}/
@@ -100,7 +97,8 @@ touch %{buildroot}%{_localstatedir}/lib/nfs/state
 mkdir -p -m 755 %{buildroot}%{_sysconfdir}/nfsmount.conf.d
 chmod 644 `grep -l -r '^#!/usr/bin/python' %{buildroot}%{_sbindir}` || :
 
-%pre -n nfs-client -f statd.pre
+%pre -n nfs-client
+%sysusers_create_package statd %{SOURCE3}
 
 %post -n nfs-client
 chown root:root %{_localstatedir}/lib/nfs > /dev/null 2>&1 || :

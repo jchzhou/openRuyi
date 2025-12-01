@@ -29,14 +29,13 @@ BuildOption(conf):    -D introspection=false
 BuildOption(conf):    -D gtk_doc=false
 
 BuildRequires:  python3 meson ninja
-BuildRequires:  gcc-c++ expat-devel pam-devel pkgconfig sysuser-tools
+BuildRequires:  gcc-c++ expat-devel pam-devel pkgconfig
 BuildRequires:  pkgconfig(duktape) >= 2.2.0
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gmodule-2.0)
 BuildRequires:  pkgconfig(libsystemd)
 
-%sysusers_requires
 %systemd_ordering
 
 %description

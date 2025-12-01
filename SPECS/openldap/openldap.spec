@@ -72,12 +72,11 @@ BuildOption(conf): --with-argon2=libargon2
 
 BuildOption(install): STRIP="" "sysconfdir=%{_sysconfdir}/openldap" "libexecdir=%{_libexecdir}"
 
-BuildRequires:  libargon2-devel cyrus-sasl-devel db-devel mandoc libtool sysuser-tools unixODBC-devel
+BuildRequires:  libargon2-devel cyrus-sasl-devel db-devel mandoc libtool unixODBC-devel
 BuildRequires:  pkgconfig(krb5) pkgconfig(systemd) pkgconfig(openssl)
 Requires:       /usr/bin/awk
 Requires:       libldap2 = %{version}
 Recommends:     cyrus-sasl
-%sysusers_requires
 
 %description
 OpenLDAP is a client and server reference implementation of the

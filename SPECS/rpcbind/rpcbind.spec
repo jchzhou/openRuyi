@@ -29,7 +29,6 @@ BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  autoconf automake
 %{?systemd_ordering}
-%{?sysusers_requires}
 
 %description
 Rpcbind is a replacement for portmap, providing a transport-independent
