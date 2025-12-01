@@ -26,7 +26,6 @@ BuildRequires:  pkgconfig(polkit-gobject-1)
 BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(mount)
-Requires:       pcsc-ifd-handler
 Requires:       polkit
 Recommends:     ccid
 
