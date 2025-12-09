@@ -7,7 +7,7 @@
 %global srcname pytest_asyncio
 
 Name:           python-pytest-asyncio
-Version:        0.24.0
+Version:        1.3.0
 Release:        %autorelease
 License:        Apache-2.0
 URL:            https://github.com/pytest-dev/pytest-asyncio
