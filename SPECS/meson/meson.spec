@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           meson
-Version:        1.9.0
+Version:        1.10.0
 Release:        %autorelease
 Summary:        High productivity build system
 License:        Apache-2.0
