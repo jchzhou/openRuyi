@@ -75,6 +75,7 @@ sed -iE 's/, *"flit_core\/vendor\/\*\*\/LICENSE\*"//' pyproject.toml
 %pyproject_buildrequires
 %endif
 
+%build
 %if %{with bootstrap}
 %{python3} -m flit_core.wheel
 %else
