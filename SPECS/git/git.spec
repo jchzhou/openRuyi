@@ -134,7 +134,6 @@ BuildArch:      noarch
 Requires:       git = %{version}-%{release}
 Requires:       perl(Authen::SASL)
 Requires:       perl(Cwd)
-Requires:       perl(Email::Valid)
 Requires:       perl(File::Spec)
 Requires:       perl(File::Spec::Functions)
 Requires:       perl(File::Temp)
