@@ -132,7 +132,6 @@ Ignore: texlive-filesystem:cron
 Macros:
 %build_ldflags %{nil}
 %_empty_manifest_terminate_build 0
-%__spec_check_pre exit 0
 %_unpackaged_files_terminate_build 1
 %_lto_cflags %{nil}
 %dist .or
