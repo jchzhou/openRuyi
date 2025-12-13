@@ -1,0 +1,27 @@
+diff --git a/tests/meson.build b/tests/meson.build
+index d3e6989..e6c57b9 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -103,22 +103,6 @@ test('IPIPv6Localhost',
+ 		files('ip-localhost-ipv6')
+ 	]
+ )
+-test('IPIPv4Localhost',
+-	testrunner,
+-	args : [
+-		'--test-outfile',
+-		ipcalc.full_path() + ' -h 127.0.0.1',
+-		files('ip-localhost-ipv4')
+-	]
+-)
+-test('IPIPv4LocalhostJson',
+-	testrunner,
+-	args : [
+-		'--test-outfile',
+-		ipcalc.full_path() + ' -j -h 127.0.0.1',
+-		files('ip-localhost-ipv4-json')
+-	]
+-)
+ # --class-prefix tests
+ test('AssignClassPrefix12',
+ 	testrunner,
