@@ -1,0 +1,157 @@
+# Copyright (C) 2015 Daniel Vrátil <dvratil@redhat.com>
+# Copyright (C) 2017 Daniel Vrátil <dvratil@fedoraproject.org>
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+# origin from fedora's cmake.prov and cmake.req python script, use rpm macro rewrite it.
+
+%__cmake_provides()	%{lua:
+local function rsplit(s, sep, limit)
+    limit = limit or math.huge
+    local parts = {}
+    local right = s
+    while limit > 1 do
+        local i = right:match(".*()" .. sep)
+        if not i then break end
+        table.insert(parts, 1, right:sub(i + #sep))
+        right = right:sub(1, i - 1)
+        limit = limit - 1
+    end
+    table.insert(parts, 1, right)
+    return parts
+end
+
+local function parseCmakeModuleConfig(configFile)
+    local paths = rsplit(configFile, "/", 4)
+    local modulePath = string.format("%s/cmake/%s", paths[1], paths[3])
+    local cfgFile = paths[4]
+
+    local cfgSuffix1 = "Config.cmake"
+    local cfgSuffix2 = "-config.cmake"
+    if cfgFile:sub(-#cfgSuffix1) == cfgSuffix1 then
+        local cmakeModule = cfgFile:sub(1, -(#cfgSuffix1 + 1))
+        return modulePath, cmakeModule, false
+    elseif cfgFile:sub(-#cfgSuffix2) == cfgSuffix2 then
+        local cmakeModule = cfgFile:sub(1, -(#cfgSuffix2 + 1))
+        return modulePath, cmakeModule, true
+    else
+        return nil, nil, false
+    end
+end
+
+local function resolveCMakeModuleVersion(modulePath, cmakeModule, lowercase)
+    local versionFile
+    if lowercase then
+        versionFile = string.format("%s/%s-config-version.cmake", modulePath, cmakeModule)
+    else
+        versionFile = string.format("%s/%sConfigVersion.cmake", modulePath, cmakeModule)
+    end
+
+    local f, err = io.open(versionFile, "r")
+    if not f then
+        return nil
+    end
+
+    local version = nil
+    for line in f:lines() do
+        line = line:gsub("^%s+", ""):gsub("%s+$", "")
+        version = line:match('^set%(%s*PACKAGE_VERSION%s+["]?([0-9%.]+)["]?%s*.*%)$')
+        if version then
+            break
+        end
+    end
+
+    f:close()
+    return version
+end
+
+local function main()
+        local file = rpm.expand("%{1}")
+        local path = file:gsub("%s+$", "")
+        local modulePath, cmakeModule, lowercase = parseCmakeModuleConfig(path)
+        if not modulePath or not cmakeModule then
+            return
+        end
+        local version = resolveCMakeModuleVersion(modulePath, cmakeModule, lowercase)
+        local outputStr
+        if version then
+            outputStr = string.format("cmake(%s) = %s", cmakeModule, version)
+        else
+            outputStr = string.format("cmake(%s)", cmakeModule)
+        end
+        if outputStr == outputStr:lower() then
+            print(outputStr)
+        else
+            print(outputStr)
+            print(outputStr:lower())
+        end
+
+end
+
+main()
+}
+%__cmake_requires()	%{lua:
+  local function rsplit(s, sep, limit)
+    limit = limit or math.huge
+    local parts = {}
+    local right = s
+    while limit > 1 do
+        local i = right:match(".*()" .. sep)
+        if not i then break end
+        table.insert(parts, 1, right:sub(i + #sep))
+        right = right:sub(1, i - 1)
+        limit = limit - 1
+    end
+    table.insert(parts, 1, right)
+    return parts
+  end
+
+  local function parseCmakeModuleConfig(configFile)
+    local paths = rsplit(configFile, "/", 4)
+    local modulePath = string.format("%s/cmake/%s", paths[1], paths[3])
+    local cfgFile = paths[4]
+
+    local cfgSuffix1 = "Config.cmake"
+    local cfgSuffix2 = "-config.cmake"
+    if cfgFile:sub(-#cfgSuffix1) == cfgSuffix1 then
+        local cmakeModule = cfgFile:sub(1, -(#cfgSuffix1 + 1))
+        return modulePath, cmakeModule, false
+    elseif cfgFile:sub(-#cfgSuffix2) == cfgSuffix2 then
+        local cmakeModule = cfgFile:sub(1, -(#cfgSuffix2 + 1))
+        return modulePath, cmakeModule, true
+    else
+        return nil, nil, false
+    end
+  end
+
+  local function main()
+    local has_module = false
+    local is_arched = false
+
+    local isa_suf = rpm.expand("%{?_isa}")
+    local file = rpm.expand("%{1}")
+    local path = file:gsub("%s+$", "")
+    local modulePath, cmakeModule, lowercase = parseCmakeModuleConfig(path)
+    if modulePath and cmakeModule then
+        has_module = true
+        if modulePath:match(".*/usr/lib(64)?/cmake/.*") then
+            is_arched = true
+        end
+    end
+
+    if has_module then
+        if is_arched then
+            print("cmake-filesystem" .. isa_suf)
+        else
+            print("cmake-filesystem")
+        end
+    end
+  end
+
+  main()
+
+}
+%__cmake_path		^(%{_libdir}|%{_datadir})/cmake/.*/.*(Config\.cmake|-config\.cmake)$

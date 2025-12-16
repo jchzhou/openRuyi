@@ -16,6 +16,8 @@ URL:            http://www.cmake.org
 Source0:        https://www.cmake.org/files/v4.1/cmake-%{version}.tar.gz
 Source1:        macros.cmake
 Source2:        macros.buildsystem.cmake
+Source3:        cmake.attr
+
 # Patch for ruby to unconditionally check for vendordir
 Patch0:         0001-cmake-findruby.patch
 BuildSystem:    autotools
@@ -79,6 +81,8 @@ install -p -m0644 -D %{SOURCE1} %{buildroot}%{_rpmmacrodir}/macros.cmake
 sed -i -e "s|@@CMAKE_VERSION@@|%{version}|" -e "s|@@CMAKE_MAJOR_VERSION@@|4|" %{buildroot}%{_rpmmacrodir}/macros.cmake
 install -p -m0644 -D %{SOURCE2} %{buildroot}%{_rpmmacrodir}/macros.buildsystem.cmake
 
+install -p -m0644 -D %{SOURCE3} %{buildroot}%{_fileattrsdir}/cmake.attr
+
 # update cmake rpm macro file timestamp
 touch -r %{SOURCE1} %{buildroot}%{_rpmmacrodir}/macros.cmake
 touch -r %{SOURCE2} %{buildroot}%{_rpmmacrodir}/macros.buildsystem.cmake
@@ -130,6 +134,7 @@ rm -rf %{buildroot}%{_datadir}/emacs
 %exclude %{_datadir}/cmake/Templates/Windows/Windows_TemporaryKey.pfx
 
 %files rpm-macros
+%{_fileattrsdir}/cmake.attr
 %{_rpmmacrodir}/macros.cmake
 %{_rpmmacrodir}/macros.buildsystem.cmake
 
