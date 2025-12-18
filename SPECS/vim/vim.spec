@@ -57,6 +57,9 @@ rm -rf %{buildroot}%{_mandir}/tr.UTF-8/
 
 %find_lang %{name} --all-name --with-man --generate-subpackages
 
+# Nothing to check.
+%check
+
 %files
 %license %{_datadir}/%{name}/%{vimdir}/LICENSE
 %doc %{_datadir}/%{name}/%{vimdir}/README.txt
