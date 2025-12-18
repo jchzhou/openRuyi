@@ -54,8 +54,8 @@ mkdir -p %{buildroot}%{_fileattrsdir}
 install -p -m 644 -t %{buildroot}%{_fileattrsdir} *.attr
 install -p -m 755 -t %{buildroot}%{_rpmconfigdir} brp-openruyi
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
-install -p -m 644 -t %{buildroot}%{_rpmconfigdir}/ *.prov
-install -p -m 644 -t %{buildroot}%{_rpmconfigdir}/ *.ksyms
+install -p -m 755 -t %{buildroot}%{_rpmconfigdir}/ *.prov
+install -p -m 755 -t %{buildroot}%{_rpmconfigdir}/ *.ksyms
 install -p -m 644 -t %{buildroot}%{_rpmconfigdir}/macros.d macros.*
 
 %files
