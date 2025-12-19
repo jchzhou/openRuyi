@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           alsa-lib
-Version:        1.2.14
+Version:        1.2.15
 Release:        %autorelease
 Summary:        The Advanced Linux Sound Architecture (ALSA) library
 License:        LGPL-2.1-or-later
