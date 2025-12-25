@@ -57,6 +57,9 @@ rm %{buildroot}%{_libdir}/*.a
 mkdir -p %{buildroot}%{_mandir}/man3
 install -p -m 0644 man/*.3 %{buildroot}%{_mandir}/man3/
 
+# qemu-linux-user does not emulate io_setup syscall, so none of the testsuite makes sense
+%check
+
 %files
 %license COPYING
 %{_libdir}/libaio.so.1
