@@ -40,7 +40,7 @@ application and a set of components, including a generic API.
 
 %package        devel
 Summary:        Files for developing applications that use OpenSP
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Header files and libtool library for developing applications that use OpenSP.
