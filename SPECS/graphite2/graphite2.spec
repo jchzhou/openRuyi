@@ -52,7 +52,8 @@ Includes and definitions for developing with graphite2.
 %files devel
 %dir %{_libdir}/graphite2/
 %{_includedir}/graphite2/
-%{_libdir}/graphite2/graphite2-release.cmake
+# Naming of this file is changed by CMAKE_BUILD_TYPE. - 251
+%{_libdir}/graphite2/graphite2-*.cmake
 %{_libdir}/graphite2/graphite2.cmake
 %{_libdir}/libgraphite2.so
 %{_libdir}/pkgconfig/graphite2.pc
