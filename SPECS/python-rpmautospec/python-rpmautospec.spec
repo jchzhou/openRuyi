@@ -33,6 +33,9 @@ BuildRequires:  rpm-build
 BuildRequires:  libgit2
 BuildRequires:  bash-completion
 
+Requires:       rpm-build
+Requires:       python-click
+
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
 
