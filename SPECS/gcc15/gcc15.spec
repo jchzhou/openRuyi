@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: jchzhou <zhoujiacheng@iscas.ac.cn>
 #
@@ -73,7 +73,7 @@
 %define use_lto_bootstrap %{with bootstrap}
 %endif
 
-%define enable_plugins 0
+%define enable_plugins 1
 %define build_jit 0
 
 # Shared library SONAME versions
