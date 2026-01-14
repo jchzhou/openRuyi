@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,17 +10,19 @@ Version:        20250807
 Release:        %autorelease
 Summary:        ACPICA tools for the development and debug of ACPI tables
 License:        GPL-2.0-only
-VCS:            git:https://github.com/acpica/acpica
 URL:            https://www.acpica.org
+VCS:            git:https://github.com/acpica/acpica
 #!RemoteAsset
 Source0:        https://github.com/acpica/acpica/archive/refs/tags/%{version}.tar.gz
+BuildSystem:    autotools
+
+BuildOption(install):  PREFIX=%{_prefix}
+
 BuildRequires:  gcc
 BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  make
 
-BuildOption(install):  PREFIX=%{_prefix}
-BuildSystem:    autotools
 %description
 ACPICA tools for the development and debug of ACPI tables
  The ACPI Component Architecture (ACPICA) project provides an OS-independent
