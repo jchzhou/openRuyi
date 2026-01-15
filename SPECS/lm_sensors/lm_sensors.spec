@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
@@ -43,7 +43,7 @@ BuildRequires:  gcc
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       kmod
 Requires:       systemd-units
-%global  flags PREFIX=%{_prefix} LIBDIR=%{_libdir} MANDIR=%{_mandir} ETCDIR=%{_sysconfdir} EXLDFLAGS="$LDFLAGS" PROG_EXTRA=sensord BUILD_STATIC_LIB=0
+%global  flags PREFIX=%{_prefix} LIBDIR=%{_libdir} MANDIR=%{_mandir} ETCDIR=%{_sysconfdir} EXLDFLAGS="$LDFLAGS" PROG_EXTRA=sensord BUILD_STATIC_LIB=0 SBINDIR=%{_sbindir} BINDIR=%{_bindir}
 BuildOption(build):  %flags user
 BuildOption(install): %flags user_install
 
