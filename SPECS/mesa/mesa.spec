@@ -1,9 +1,12 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Icenowy Zheng <uwu@icenowy.me>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+# Using LTO with Mesa is not stable. Enabling LTO will cause Mesa to add
+# -mtls-dialect=desc, but currently glibc does not support this on riscv64
+%global _lto_cflags %{nil}
 # Mesa contains some features not applicable to Linux that must be disabled
 %global __meson_auto_features disabled
 
