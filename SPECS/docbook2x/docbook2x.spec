@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +16,7 @@ Source:         http://downloads.sourceforge.net/docbook2x/docbook2X-%{version}.
 BuildSystem:    autotools
 
 # to avoid clashing with docbook2* from docbook-utils
-BuildOption(conf): --program-transform-name='s/docbook2/db2x_docbook2/'
+BuildOption(conf):  --program-transform-name='s/docbook2/db2x_docbook2/'
 
 BuildRequires:  gcc
 BuildRequires:  make
