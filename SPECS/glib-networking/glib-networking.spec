@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,23 +11,25 @@ Release:        %autorelease
 Summary:        Network-related GIO modules for GLib
 License:        LGPL-2.1-or-later
 URL:            https://www.gnome.org
+VCS:            git:https://gitlab.gnome.org/GNOME/glib-networking.git
 #!RemoteAsset
 Source:         https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%{version}.tar.xz
 BuildSystem:    meson
 
-BuildOption(conf): -Dgnome_proxy=disabled
+BuildOption(conf):  -Dgnome_proxy=disabled
 
-BuildRequires:  meson >= 0.54.0
+BuildRequires:  meson
 BuildRequires:  ca-certificates-mozilla
 BuildRequires:  dbus
 BuildRequires:  gettext-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(gio-2.0)
-BuildRequires:  pkgconfig(glib-2.0) >= 2.69.0
-BuildRequires:  pkgconfig(gnutls) >= 3.6.5
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(libproxy-1.0)
 BuildRequires:  pkgconfig(systemd)
+
 Requires:       ca-certificates-mozilla
 
 %description
@@ -38,6 +41,7 @@ TLS (via GnuTLS) and proxy support (via libproxy).
 rm -rf %{buildroot}%{_datadir}/locale/*@*
 rm -rf %{buildroot}%{_datadir}/locale/en_CA/LC_MESSAGES
 rm -rf %{buildroot}%{_datadir}/locale/en_GB/LC_MESSAGES
+
 %find_lang %{name} --generate-subpackages
 
 %post
@@ -47,7 +51,6 @@ rm -rf %{buildroot}%{_datadir}/locale/en_GB/LC_MESSAGES
 %postun
 # TODO: When we have these macros, we should uncomment this.
 # %%gio_module_postun
-
 
 %files
 %license COPYING
