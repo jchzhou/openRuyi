@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,13 +12,14 @@ Release:        %autorelease
 Summary:        C++ port of JUnit testing framework
 License:        LGPL-2.1-or-later
 URL:            https://www.freedesktop.org/wiki/Software/cppunit/
+VCS:            git:https://anongit.freedesktop.org/git/libreoffice/cppunit.git
 #!RemoteAsset
 Source:         http://dev-www.libreoffice.org/src/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(conf): --disable-static
-BuildOption(conf): --disable-silent-rules
-BuildOption(conf): --disable-doxygen
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --disable-silent-rules
+BuildOption(conf):  --disable-doxygen
 
 BuildRequires:  gcc-c++
 
@@ -27,7 +29,7 @@ Test output can be in XML for automatic testing and GUI based for supervised tes
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the libraries, header files, and examples for developing
