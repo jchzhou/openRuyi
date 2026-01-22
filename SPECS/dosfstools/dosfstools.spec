@@ -9,18 +9,20 @@ Name:           dosfstools
 Version:        4.2
 Release:        %autorelease
 Summary:        FAT file system userspace tools
-License:        GPLv3+
+License:        GPL-3.0-or-later
 URL:            https://github.com/dosfstools/dosfstools
 #!RemoteAsset
 Source:         https://github.com/%{name}/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
 Patch:          0001-Fix-vasprintf-implementation.patch
-BuildOption(conf): --enable-compat-symlinks
 
-BuildOption(build): CFLAGS="%{optflags} -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fno-strict-aliasing"
+BuildOption(conf):   --enable-compat-symlinks
+BuildOption(build):  CFLAGS="%{optflags} -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fno-strict-aliasing"
 
-
-BuildRequires:  gcc autoconf automake
+BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
 
 %description
 The dosfstools package contains programs mkfs.fat, fsck.fat and fatlabel to
