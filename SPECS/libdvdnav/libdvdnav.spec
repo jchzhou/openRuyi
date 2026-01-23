@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,18 +15,19 @@ URL:            https://code.videolan.org/videolan/libdvdnav
 Source:         https://download.videolan.org/pub/videolan/libdvdnav/7.0.0/libdvdnav-%{version}.tar.xz
 BuildSystem:    meson
 
+BuildOption(conf):  -Ddefault_library=shared
+
 BuildRequires:  meson
 BuildRequires:  pkgconfig
-BuildRequires:  pkgconfig(dvdread) >= 6.0.0
+BuildRequires:  pkgconfig(dvdread)
 
-BuildOption(conf): -Ddefault_library=shared
 %description
 This library contains functions to display DVD video menus.
 This is a metapackage that requires the runtime library.
 
 %package        devel
 Summary:        Development files for libdvdnav
-Requires:       %{name}%{?_isa} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files and libraries needed to develop
