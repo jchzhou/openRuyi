@@ -11,23 +11,26 @@ Release:        %autorelease
 Summary:        An event notification library
 License:        BSD-3-Clause
 URL:            http://libevent.org/
+VCS:            git:https://github.com/libevent/libevent
 #!RemoteAsset
 Source0:        https://github.com/libevent/libevent/releases/download/release-%{version}-stable/libevent-%{version}-stable.tar.gz
 #!RemoteAsset
 Source1:        https://github.com/libevent/libevent/releases/download/release-%{version}-stable/libevent-%{version}-stable.tar.gz.asc
+BuildSystem:    autotools
+
 # PATCH-FEATURE-UPSTREAM 0001-evwatch-Add-prepare-and-check-watchers.patch
-Patch:         0001-evwatch-Add-prepare-and-check-watchers.patch
+Patch0:         0001-evwatch-Add-prepare-and-check-watchers.patch
 # PATCH-FEATURE-UPSTREAM 0002-evwatch-fix-race-condition.patch
-Patch:         0002-evwatch-fix-race-condition.patch
+Patch1:         0002-evwatch-fix-race-condition.patch
+
+BuildOption(conf):  --disable-libevent-regress
+
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
-BuildRequires:  openssl-devel
+BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkg-config
-BuildRequires:  zlib-devel
-
-BuildSystem:    autotools
-BuildOption(conf): --disable-libevent-regress
+BuildRequires:  pkgconfig(zlib)
 
 %description
 The libevent API provides a mechanism to execute a callback function
@@ -35,15 +38,15 @@ when a specific event occurs on a file descriptor or after a timeout
 has been reached. Furthermore, libevent also support callbacks due to
 signals or regular timeouts.
 
-%package devel
+%package        devel
 Summary:        Development files for libevent2
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       glibc-devel
 # Both have /usr/include/event.h
 Conflicts:      libev-libevent-devel
 Provides:       %{name}:%{_includedir}/event.h
 
-%description devel
+%description    devel
 The libevent API provides a mechanism to execute a callback function
 when a specific event occurs on a file descriptor or after a timeout
 has been reached. Furthermore, libevent also support callbacks due to
@@ -51,11 +54,11 @@ signals or regular timeouts.
 
 This package holds the development files for libevent2.
 
-%package static
+%package        static
 Summary:        Static libraries for libevent2
-Requires:       %{name}-devel = %{version}
+Requires:       %{name}-devel = %{version}-%{release}
 
-%description static
+%description    static
 The libevent API provides a mechanism to execute a callback function
 when a specific event occurs on a file descriptor or after a timeout
 has been reached. Furthermore, libevent also support callbacks due to
