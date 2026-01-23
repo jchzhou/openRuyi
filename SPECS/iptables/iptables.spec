@@ -67,7 +67,7 @@ libxtables development headers and pkgconfig files
 
 %package        utils
 Summary:        iptables and ip6tables misc utilities
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    utils
 Utils for iptables
@@ -78,7 +78,7 @@ a safer way to update iptables remotely.
 
 %package        nft
 Summary:        nftables compatibility for iptables, arptables and ebtables
-Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires(post): update-alternatives
 Requires(post): /usr/bin/readlink
 Requires(postun): update-alternatives
@@ -92,8 +92,8 @@ nftables compatibility for iptables, arptables and ebtables.
 
 %package        services
 Summary:        iptables and ip6tables services for iptables
-Requires:       %{name} = %{version}-%{release}
-Requires:       %{name}-utils = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-utils%{?_isa} = %{version}-%{release}
 %{?systemd_ordering}
 Provides:       arptables-services = %{version}-%{release}
 Provides:       ebtables-services = %{version}-%{release}
