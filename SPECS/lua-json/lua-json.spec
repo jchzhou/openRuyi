@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,13 +15,13 @@ URL:            https://github.com/harningt/luajson
 #!RemoteAsset
 Source:         https://github.com/harningt/luajson/archive/refs/tags/%{version}.tar.gz
 Patch:          0001-support-lpeg1.1.0.patch
+BuildArch:      noarch
 BuildSystem:    autotools
 
-BuildRequires:  lua-devel
+BuildRequires:  pkgconfig(lua)
 
-Requires:       lua >= 5.1
-Requires:       lua-lpeg >= 0.8.1
-BuildArch:      noarch
+Requires:       lua
+Requires:       lua-lpeg
 
 %description
 LuaJSON is a customizable JSON decoder/encoder, using LPEG for parsing.
