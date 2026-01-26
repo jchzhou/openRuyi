@@ -15,6 +15,7 @@ License:        GPL-2.0-only
 URL:            https://pagure.io/mlocate
 #!RemoteAsset
 Source0:        http://releases.pagure.org/mlocate/mlocate-%{version}.tar.xz
+Source1:        mlocate.sysusers
 BuildSystem:    autotools
 
 BuildOption(conf):  --localstatedir=%{_localstatedir}/lib
@@ -38,6 +39,12 @@ autoreconf -fiv
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang %{name} --generate-subpackages
+mkdir -p %{buildroot}%{_sysusersdir}
+install -m 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
+touch %{buildroot}%{_localstatedir}/lib/mlocate/mlocate.db
+
+%pre
+%sysusers_create_package %{name} %{SOURCE1}
 
 %files
 %license COPYING
@@ -47,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_bindir}/updatedb
 %{_mandir}/man*/*
 %{_datadir}/locale/en_GB/LC_MESSAGES/mlocate.mo
+%{_sysusersdir}/%{name}.conf
+%dir %attr(0750,root,mlocate) %{_localstatedir}/lib/mlocate
+%ghost %attr(0640,root,mlocate) %{_localstatedir}/lib/mlocate/mlocate.db
 
 %changelog
 %{?autochangelog}
