@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,17 +14,19 @@ Release:        %autorelease
 Summary:        Foreign function calls from interpreters
 License:        GPL-2.0-or-later
 URL:            https://www.gnu.org/software/libffcall/
+VCS:            git:https://git.savannah.gnu.org/git/libffcall.git
 #!RemoteAsset
 Source:         https://ftpmirror.gnu.org/gnu/libffcall/libffcall-%{version}.tar.gz
 #!RemoteAsset
 Source:         https://ftpmirror.gnu.org/gnu/libffcall/libffcall-%{version}.tar.gz.sig
+BuildSystem:    autotools
+
+BuildOption(conf):  --disable-static
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  make
-BuildSystem:    autotools
-BuildOption(conf): --disable-static
 
 %description
 GNU Libffcall is a collection of libraries that can be used to build
@@ -31,7 +34,7 @@ foreign function call interfaces in embedded interpreters.
 
 %package        devel
 Summary:        Development files for the libffcall library
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the C++ header files, libraries, and build system files
