@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -24,11 +25,11 @@ both creating Ogg bitstreams and extracting packets from them.
 
 %package        devel
 Summary:        Development files and documentation for libogg
-Requires:       %{name}%{?_isa} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       automake
 
-%description devel
+%description    devel
 This package contains the header files, libraries, documentation, and other
 files needed to develop applications that use the libogg library.
 
