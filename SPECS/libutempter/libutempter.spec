@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,24 +14,26 @@ License:        LGPL-2.1-or-later
 URL:            https://github.com/altlinux/libutempter
 #!RemoteAsset
 Source:         https://github.com/altlinux/libutempter/archive/refs/tags/%{version}-alt1.tar.gz#/%{name}-%{version}.tar.gz
-Patch:          0001-fix-install-path.patch
 BuildSystem:    autotools
 
-BuildOption(build):   -C libutempter libdir=%{_libdir} libexecdir=%{_libexecdir}
-BuildOption(install): -C libutempter libdir=%{_libdir} libexecdir=%{_libexecdir}
+Patch0:         0001-fix-install-path.patch
+
+BuildOption(build):  -C libutempter libdir=%{_libdir} libexecdir=%{_libexecdir}
+BuildOption(install):  -C libutempter libdir=%{_libdir} libexecdir=%{_libexecdir}
 
 BuildRequires:  gcc
+
 Requires(pre):  shadow
 
 %description
-This library supports saving session records to
-to utmp and wtmp files.
+This library supports saving session records to utmp and wtmp
+files.
 
-%package devel
+%package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 Development files for %{name}.
 
 # No configure
