@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Mahno <bestwow2014@gmail.com>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,15 +11,19 @@ Summary:        A text-based modem control and terminal emulation program
 Version:        2.10
 Release:        %autorelease
 URL:            https://salsa.debian.org/minicom-team/minicom
-# The file 'src/wildmat.c' is in Public Domain
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 #!RemoteAsset
 Source0:        https://salsa.debian.org/minicom-team/minicom/-/archive/%{version}/%{name}-%{version}.tar.gz
-
-BuildRequires:  make gcc
-BuildRequires:  ncurses-devel autoconf automake gettext-devel
-Recommends:       lrzsz
 BuildSystem:    autotools
+
+BuildRequires:  make
+BuildRequires:  gcc
+BuildRequires:  pkgconfig(ncurses)
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  gettext-devel
+
+Recommends:     lrzsz
 
 %description
 Minicom is a simple text-based modem control and terminal emulation
