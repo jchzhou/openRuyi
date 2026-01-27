@@ -2,16 +2,20 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+%global nginx_moduledir %{_libdir}/nginx/modules
+%global nginx_moduleconfdir %{_datadir}/nginx/modules
 
 Name:           nginx
 Version:        1.28.0
 Release:        %autorelease
 Summary:        High performance web server and reverse proxy server
-
 License:        BSD-2-Clause
 URL:            https://nginx.org
+VCS:            git:https://github.com/nginx/nginx.git
 #!RemoteAsset
 Source0:        https://nginx.org/download/nginx-%{version}.tar.gz
 Source1:        nginx.service
@@ -20,10 +24,12 @@ Source3:        nginx.sysusers
 
 BuildRequires:  gcc
 BuildRequires:  make
-BuildRequires:  openssl-devel
-BuildRequires:  pcre2-devel
-BuildRequires:  zlib-devel
+BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(libpcre2-posix)
+BuildRequires:  pkgconfig(zlib)
 BuildRequires:  systemd-rpm-macros
+
+Provides:       webserver
 
 Requires:       openssl
 Requires:       pcre2
@@ -32,21 +38,16 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
-Provides:       webserver
-
-%global nginx_moduledir %{_libdir}/nginx/modules
-%global nginx_moduleconfdir %{_datadir}/nginx/modules
-
 %description
 Nginx is a web server and a reverse proxy server for HTTP, SMTP, POP3 and
 IMAP protocols, with a strong focus on high concurrency, performance and low
 memory usage.
 
-%package doc
+%package        doc
 Summary:        Documentation and examples for nginx
 BuildArch:      noarch
 
-%description doc
+%description    doc
 This package contains documentation, man pages, vim syntax files, and
 example HTML files for nginx web server.
 
