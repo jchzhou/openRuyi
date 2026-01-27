@@ -1,11 +1,13 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 # libmariadbd soname (embedded library)
 %define soname 19
+
 # Mroonga and RocksDB are available only for x86_64 architecture
 # see https://mariadb.com/kb/en/mariadb/about-mroonga/ and
 # https://mariadb.com/kb/en/library/myrocks-supported-platforms/
@@ -16,6 +18,7 @@
 %define with_mroonga 0
 %define with_rocksdb 0
 %endif
+
 # Define python interpreter version
 %define python_path %{_bindir}/python3
 # Source directory (for declarative builds where install runs from build dir)
@@ -25,7 +28,7 @@ Name:           mariadb
 Version:        11.8.3
 Release:        %autorelease
 Summary:        Server part of MariaDB
-License:        GPL-2.0-only WITH FOSS-exception-2.0
+License:        GPL-2.0-only
 URL:            https://www.mariadb.org
 VCS:            git:https://github.com/MariaDB/server.git
 #!RemoteAsset
@@ -36,48 +39,49 @@ Source3:        mariadb.service.in
 Source4:        mariadb.target
 Source5:        mysql-systemd-helper
 Source6:        mariadb@.service.in
-Patch1:         fix-pamdir.patch
 BuildSystem:    cmake
 
-BuildOption(conf): -DWITH_SSL=system
-BuildOption(conf): -DENABLED_PROFILING=ON
-BuildOption(conf): -DENABLE_DEBUG_SYNC=OFF
-BuildOption(conf): -DWITH_PIC=ON
-BuildOption(conf): -DWITH_ZLIB=system
-BuildOption(conf): -DWITH_JEMALLOC=no
-BuildOption(conf): -DWITH_READLINE=OFF
-BuildOption(conf): -DINSTALL_LAYOUT=RPM
-BuildOption(conf): -DWITH_LZ4=system
-BuildOption(conf): -DMYSQL_UNIX_ADDR="%{_rundir}/mysql/mysql.sock"
-BuildOption(conf): -DINSTALL_UNIX_ADDRDIR="%{_rundir}/mysql/mysql.sock"
-BuildOption(conf): -DINSTALL_MYSQLSHAREDIR=share/%{name}
-BuildOption(conf): -DWITH_COMMENT="MariaDB rpm"
-BuildOption(conf): -DWITH_EXTRA_CHARSET=all
-BuildOption(conf): -DWITH_INNOBASE_STORAGE_ENGINE=1
-BuildOption(conf): -DWITH_PERFSCHEMA_STORAGE_ENGINE=1
-BuildOption(conf): -DWITH_LIBWRAP=OFF
-BuildOption(conf): -DPLUGIN_OQGRAPH=NO
+Patch0:         fix-pamdir.patch
+
+BuildOption(conf):  -DWITH_SSL=system
+BuildOption(conf):  -DENABLED_PROFILING=ON
+BuildOption(conf):  -DENABLE_DEBUG_SYNC=OFF
+BuildOption(conf):  -DWITH_PIC=ON
+BuildOption(conf):  -DWITH_ZLIB=system
+BuildOption(conf):  -DWITH_JEMALLOC=no
+BuildOption(conf):  -DWITH_READLINE=OFF
+BuildOption(conf):  -DINSTALL_LAYOUT=RPM
+BuildOption(conf):  -DWITH_LZ4=system
+BuildOption(conf):  -DMYSQL_UNIX_ADDR="%{_rundir}/mysql/mysql.sock"
+BuildOption(conf):  -DINSTALL_UNIX_ADDRDIR="%{_rundir}/mysql/mysql.sock"
+BuildOption(conf):  -DINSTALL_MYSQLSHAREDIR=share/%{name}
+BuildOption(conf):  -DWITH_COMMENT="MariaDB rpm"
+BuildOption(conf):  -DWITH_EXTRA_CHARSET=all
+BuildOption(conf):  -DWITH_INNOBASE_STORAGE_ENGINE=1
+BuildOption(conf):  -DWITH_PERFSCHEMA_STORAGE_ENGINE=1
+BuildOption(conf):  -DWITH_LIBWRAP=OFF
+BuildOption(conf):  -DPLUGIN_OQGRAPH=NO
 %if 0%{with_mroonga} < 1
-BuildOption(conf): -DPLUGIN_MROONGA=NO
+BuildOption(conf):  -DPLUGIN_MROONGA=NO
 %endif
 %if 0%{with_rocksdb} < 1
-BuildOption(conf): -DPLUGIN_ROCKSDB=NO
+BuildOption(conf):  -DPLUGIN_ROCKSDB=NO
 %endif
-BuildOption(conf): -DPYTHON_SHEBANG=%{python_path}
-BuildOption(conf): -DWITH_EMBEDDED_SERVER=true
-BuildOption(conf): -DWITH_MARIABACKUP=ON
-BuildOption(conf): -DCOMPILATION_COMMENT="MariaDB package"
-BuildOption(conf): -DENABLE_DOWNLOADS=false
-BuildOption(conf): -DWITH_FMT=system
-BuildOption(conf): -DINSTALL_PLUGINDIR_RPM="%{_lib}/mysql/plugin"
-BuildOption(conf): -DINSTALL_LIBDIR_RPM="%{_lib}"
-BuildOption(conf): -DINSTALL_SYSCONF2DIR="%{_sysconfdir}/my.cnf.d"
-BuildOption(conf): -DINSTALL_SQLBENCHDIR=share
-BuildOption(conf): -DCMAKE_EXE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,relro,-z,now -Wl,-Bsymbolic -Wl,-Bsymbolic-functions"
-BuildOption(conf): -DCMAKE_MODULE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,relro,-z,now -Wl,-Bsymbolic -Wl,-Bsymbolic-functions"
-BuildOption(conf): -DCMAKE_SHARED_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,relro,-z,now -Wl,-Bsymbolic -Wl,-Bsymbolic-functions"
-BuildOption(conf): -Wno-dev
-BuildOption(check): -E test-connect
+BuildOption(conf):  -DPYTHON_SHEBANG=%{python_path}
+BuildOption(conf):  -DWITH_EMBEDDED_SERVER=true
+BuildOption(conf):  -DWITH_MARIABACKUP=ON
+BuildOption(conf):  -DCOMPILATION_COMMENT="MariaDB package"
+BuildOption(conf):  -DENABLE_DOWNLOADS=false
+BuildOption(conf):  -DWITH_FMT=system
+BuildOption(conf):  -DINSTALL_PLUGINDIR_RPM="%{_lib}/mysql/plugin"
+BuildOption(conf):  -DINSTALL_LIBDIR_RPM="%{_lib}"
+BuildOption(conf):  -DINSTALL_SYSCONF2DIR="%{_sysconfdir}/my.cnf.d"
+BuildOption(conf):  -DINSTALL_SQLBENCHDIR=share
+BuildOption(conf):  -DCMAKE_EXE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,relro,-z,now -Wl,-Bsymbolic -Wl,-Bsymbolic-functions"
+BuildOption(conf):  -DCMAKE_MODULE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,relro,-z,now -Wl,-Bsymbolic -Wl,-Bsymbolic-functions"
+BuildOption(conf):  -DCMAKE_SHARED_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,relro,-z,now -Wl,-Bsymbolic -Wl,-Bsymbolic-functions"
+BuildOption(conf):  -Wno-dev
+BuildOption(check):  -E test-connect
 
 # needed for bison SQL parser and wsrep API
 BuildRequires:  bison
@@ -107,14 +111,16 @@ BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  pkgconfig
 BuildRequires:  procps
 BuildRequires:  pkgconfig(libsystemd)
+BuildRequires:  pkgconfig(lzo2)
+
 # Required by rcmysql
 Requires:       %{name}-client
-Requires:       %{name}-errormessages = %{version}
+Requires:       %{name}-errormessages = %{version}-%{release}
 Requires:       hostname
 Requires:       perl
 # myrocks_hotbackup needs MySQLdb - if we want to use it under python3, we need python3-mysqlclient
 # Requires:       python3-mysqlclient
-BuildRequires:  pkgconfig(lzo2)
+
 
 %description
 MariaDB is an open-source, multi-threaded, relational database management
@@ -125,28 +131,25 @@ This package only contains the server-side programs.
 
 %package        libs
 Summary:        MariaDB embedded server library
-Requires:       %{name}-errormessages >= %{version}
+Requires:       %{name}-errormessages >= %{version}-%{release}
 
 %description    libs
 This package contains MariaDB library that allows to run an embedded
 MariaDB server inside a client application.
 
-%package        -n libmariadbd-devel
+%package        devel
 Summary:        MariaDB embedded server development files
-Requires:       libaio-devel
-# The headers files are the shared
-Requires:       libmariadb-devel >= 3.0
-Requires:       %{name}-libs = %{version}
+Requires:       pkgconfig(libaio)
+Requires:       pkgconfig(libmariadb)
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
-%description    -n libmariadbd-devel
+%description    devel
 This package contains the development header files and libraries
 for developing applications that embed the MariaDB.
 
 %package        client
 Summary:        Client for MariaDB
-Requires:       %{name}-errormessages = %{version}
-# Explicit requires to pull in charsets for errormessages
-# Requires:       libmariadb3 >= 3.0
+Requires:       %{name}-errormessages = %{version}-%{release}
 
 %description    client
 This package contains the standard clients for MariaDB.
@@ -172,10 +175,10 @@ the directory %{_datadir}/sql-bench after starting MariaDB.
 
 %package        test
 Summary:        Testsuite for MariaDB
-Requires:       %{name} = %{version}
-Requires:       %{name}-bench = %{version}
-Requires:       %{name}-client = %{version}
-Requires:       %{name}-tools = %{version}
+Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}-bench = %{version}-%{release}
+Requires:       %{name}-client = %{version}-%{release}
+Requires:       %{name}-tools = %{version}-%{release}
 # Requires libmariadb_plugins in order to test client plugins successfuly
 # Requires:       libmariadb_plugins >= 3.0
 # Requires:       perl-DBD-mysql
@@ -228,33 +231,33 @@ rm -f %{name}-test/t/file_contents.test %{name}-test/r/file_contents.result
 
 # Specify perl path on shebangs
 for i in `grep -Rl '^#!%{_bindir}/env perl$' .`; do
-	sed -i 's|%{_bindir}/env perl|%{_bindir}/perl|' $i
+    sed -i 's|%{_bindir}/env perl|%{_bindir}/perl|' $i
 done
 
 %install -a
 # Helper function to generate filelist for binaries and their manpages
 filelist()
 {
-	echo '%%defattr(-, root, root)'
-	pushd %{buildroot} >/dev/null
-	for i; do
-		if test -e usr/sbin/"$i"; then
-			echo %{_sbindir}/"$i"
-		fi
-		if test -e usr/bin/"$i"; then
-			echo %{_bindir}/"$i"
-		fi
-		if test -d usr/share/*/"$i"; then
-			echo "/`echo usr/share/*/"$i"`"
-		fi
-		if test -n "`ls -1 %{buildroot}$i 2> /dev/null`"; then
-			echo "$i"
-		fi
-		if ls usr/share/man/*/"$i".[1-9]* >/dev/null 2>&1; then
-			echo "%{_mandir}/*/$i.[1-9]*"
-		fi
-	done
-	popd >/dev/null
+    echo '%%defattr(-, root, root)'
+    pushd %{buildroot} >/dev/null
+    for i; do
+        if test -e usr/sbin/"$i"; then
+            echo %{_sbindir}/"$i"
+        fi
+        if test -e usr/bin/"$i"; then
+            echo %{_bindir}/"$i"
+        fi
+        if test -d usr/share/*/"$i"; then
+            echo "/`echo usr/share/*/"$i"`"
+        fi
+        if test -n "`ls -1 %{buildroot}$i 2> /dev/null`"; then
+            echo "$i"
+        fi
+        if ls usr/share/man/*/"$i".[1-9]* >/dev/null 2>&1; then
+            echo "%{_mandir}/*/$i.[1-9]*"
+        fi
+    done
+    popd >/dev/null
 }
 
 # Create log directory with the expected perms of mysql
@@ -383,7 +386,7 @@ DOCS=(COPYING README.md plugin/daemon_example/daemon_example.ini)
 DOCDIR=%{buildroot}%{_defaultdocdir}/%{name}
 install -d -m 755 ${DOCDIR}
 for i in "${DOCS[@]}"; do
-	install -m 644 "%{srcdir}/${i}" "${DOCDIR}" || true
+    install -m 644 "%{srcdir}/${i}" "${DOCDIR}" || true
 done
 
 # Install default configuration file
@@ -425,7 +428,7 @@ fi
 find '%{buildroot}'%{_datadir}/%{name}-test -name '*.orig' -delete
 %fdupes -s '%{buildroot}'%{_datadir}/%{name}-test
 for i in `grep -Rl '\r' '%{buildroot}'%{_datadir}/sql-bench`; do
-	dos2unix "$i"
+    dos2unix "$i"
 done
 
 # Use our configuration stuff instead of upstream one
@@ -513,7 +516,7 @@ chmod 4755 %{_libdir}/mysql/plugin/auth_pam_tool_dir/auth_pam_tool 2>/dev/null |
 %files libs
 %{_libdir}/libmariadbd.so.*
 
-%files -n libmariadbd-devel
+%files devel
 %{_libdir}/libmysqld.so
 %{_libdir}/libmariadbd.so
 
