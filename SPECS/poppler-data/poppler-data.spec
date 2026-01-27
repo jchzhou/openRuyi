@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,11 +13,12 @@ Release:        %autorelease
 Summary:        Encoding Files for use with poppler
 License:        BSD-3-Clause AND GPL-2.0-only AND GPL-3.0-only
 URL:            https://poppler.freedesktop.org/
+VCS:            git:https://gitlab.freedesktop.org/poppler/poppler-data
 #!RemoteAsset
 Source:         https://gitlab.freedesktop.org/poppler/poppler-data/-/archive/POPPLER_DATA_%{ver}/poppler-data-POPPLER_DATA_%{ver}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(install): prefix=%{_prefix}
+BuildOption(install):  prefix=%{_prefix}
 
 BuildRequires:  make
 
@@ -28,7 +30,7 @@ to correctly render CJK and Cyrillic text properly.
 
 %package        devel
 Summary:        Developer files for %{name}
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
