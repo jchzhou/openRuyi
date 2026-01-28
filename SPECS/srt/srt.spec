@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,23 +11,25 @@ Release:        %autorelease
 Summary:        Secure Reliable Transport protocol tools
 License:        MPL-2.0
 URL:            https://www.srtalliance.org
+VCS:            git:https://github.com/Haivision/srt
 #!RemoteAsset
 Source:         https://github.com/Haivision/srt/archive/v%{version}/%{name}-%{version}.tar.gz
-Patch:          0001-build-Update-for-compatibility-with-CMake-4.x-3167.patch
 BuildSystem:    cmake
 
-BuildOption(conf): -DENABLE_STATIC=OFF
-BuildOption(conf): -DENABLE_UNITTESTS=ON
-BuildOption(conf): -DENABLE_GETNAMEINFO=ON
-BuildOption(conf): -DENABLE_BONDING=ON
-BuildOption(conf): -DENABLE_PKTINFO=ON
-BuildOption(conf): -DUSE_ENCLIB=gnutls
+Patch0:         0001-build-Update-for-compatibility-with-CMake-4.x-3167.patch
+
+BuildOption(conf):  -DENABLE_STATIC=OFF
+BuildOption(conf):  -DENABLE_UNITTESTS=ON
+BuildOption(conf):  -DENABLE_GETNAMEINFO=ON
+BuildOption(conf):  -DENABLE_BONDING=ON
+BuildOption(conf):  -DENABLE_PKTINFO=ON
+BuildOption(conf):  -DUSE_ENCLIB=gnutls
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  make
-BuildRequires:  gnutls-devel
-BuildRequires:  nettle-devel
+BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(nettle)
 BuildRequires:  pkgconfig(gmock)
 BuildRequires:  gtest-devel
 
@@ -35,11 +38,11 @@ Secure Reliable Transport (SRT) is an open source transport technology that
 optimizes streaming performance across unpredictable networks.
 This package contains the command-line tools.
 
-%package devel
+%package        devel
 Summary:        Development libraries and headers for SRT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 This package contains the libraries and header files needed for developing
 applications that use the Secure Reliable Transport protocol.
 
