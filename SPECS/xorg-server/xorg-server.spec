@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Icenowy Zheng <uwu@icenowy.me>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -124,15 +125,15 @@ system memory, which is useful for headless automation processes.
 %{_mandir}/man1/Xserver.1*
 %{_libdir}/xorg/protocol.txt
 
-%files          xnest
+%files xnest
 %{_bindir}/Xnest
 %{_mandir}/man1/Xnest.1*
 
-%files          xephyr
+%files xephyr
 %{_bindir}/Xephyr
 %{_mandir}/man1/Xephyr.1*
 
-%files          xvfb
+%files xvfb
 %{_bindir}/Xvfb
 %{_mandir}/man1/Xvfb.1*
 
