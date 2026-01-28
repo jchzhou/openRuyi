@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Unicode Character Database
 License:        Unicode-3.0
 URL:            https://www.unicode.org/ucd/
-# TODO: How to use VCS for unicode-ucd?
+# VCS: No VCS link available
 #!RemoteAsset
 Source0:        https://www.unicode.org/Public/%{version}/ucd/UCD.zip
 #!RemoteAsset
