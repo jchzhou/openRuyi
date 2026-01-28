@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,22 +16,31 @@ URL:            https://github.com/vasi/squashfuse
 Source:         https://github.com/vasi/squashfuse/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(conf): --disable-static
-BuildOption(conf): --disable-demo
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --disable-demo
 
-BuildRequires: make autoconf automake libtool gcc
-BuildRequires: fuse-devel libattr-devel libzstd-devel lz4-devel xz-devel zlib-devel
+BuildRequires:  make
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  gcc
+BuildRequires:  fuse-devel
+BuildRequires:  pkgconfig(libattr)
+BuildRequires:  pkgconfig(liblz4)
+BuildRequires:  pkgconfig(libzstd)
+BuildRequires:  pkgconfig(liblzma)
+BuildRequires:  pkgconfig(zlib)
 
 %description
 Squashfuse lets you mount SquashFS archives in user-space. It supports almost
 all features of the SquashFS format, yet is still fast and memory-efficient.
 This package contains the user-space tools and runtime libraries.
 
-%package devel
-Summary: Development files for %{name}
-Requires: %{name} = %{version}
+%package        devel
+Summary:        Development files for %{name}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 This package contains the header files and development libraries for
 developing applications that use squashfuse.
 
