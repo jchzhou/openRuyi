@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -38,7 +39,6 @@ BuildRequires:  pkgconfig(libtasn1)
 BuildRequires:  socat
 BuildRequires:  expect
 BuildRequires:  pkgconfig(gmp)
-
 %if %{with gnutls}
 BuildRequires:  pkgconfig(gnutls)
 %endif
@@ -48,17 +48,16 @@ Requires:       libtpms >= 0.10.0
 %description
 TPM emulator built on libtpms providing TPM functionality for QEMU VMs.
 
-
 %package        devel
 Summary:        Include files for the TPM emulator
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Include files for the TPM emulator.
 
 %package        tests
 Summary:        Installed swtpm tests
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    tests
 Installed swtpm tests.
