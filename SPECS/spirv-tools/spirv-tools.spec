@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,12 +19,12 @@ BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
 BuildOption(conf):  -DSPIRV-Headers_SOURCE_DIR=%{_prefix}
 BuildOption(conf):  -DPYTHON_EXECUTABLE=%{__python3}
 BuildOption(conf):  -DSPIRV_TOOLS_BUILD_STATIC=OFF
-BuildOption(check): -E spirv-tools-copyrights
+BuildOption(check):  -E spirv-tools-copyrights
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  spirv-headers-devel
+BuildRequires:  pkgconfig(SPIRV-Headers)
 
 %description
 The package includes an assembler, binary module parser,
@@ -31,8 +32,8 @@ disassembler, and validator for SPIR-V.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}-%{release}
-Requires:       spirv-headers-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(SPIRV-Headers)
 
 %description    devel
 Development files for %{name}.
