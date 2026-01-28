@@ -193,6 +193,11 @@ Patch1034:      0034-RISC-V-Update-Profiles-string-in-RV23.patch
 Patch1035:      0035-RISC-V-Add-Profiles-RVA-B23S64-support.patch
 Patch1036:      0036-RISC-V-check-if-we-can-vec_extract.patch
 
+# Backport to fix https://gcc.gnu.org/bugzilla/show_bug.cgi?id=123850
+Patch1037:      0037-Enable-ip-cp-cloning-over-non-hot-edges.patch
+Patch1038:      0038-Improve-maybe_hot-handling-in-inliner-heuristics.patch
+Patch1039:      0039-Fix-overflow-check-in-profile_count-operator-const-s.patch
+
 %description
 Core package for the GNU Compiler Collection, including the C language
 frontend.

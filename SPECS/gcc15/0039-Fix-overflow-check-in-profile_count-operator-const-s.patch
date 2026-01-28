@@ -1,0 +1,29 @@
+From 1757c320badc92c0628eafcd07d54585659692ed Mon Sep 17 00:00:00 2001
+From: Jan Hubicka <hubicka@ucw.cz>
+Date: Sun, 6 Jul 2025 10:48:46 +0200
+Subject: [PATCH] Fix overflow check in profile_count::operator* (const sreal
+ &num).
+
+gcc/ChangeLog:
+
+	* profile-count.cc (profile_count::operator*): fix overflow check.
+---
+ gcc/profile-count.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/profile-count.cc b/gcc/profile-count.cc
+index 190bbebb5a77..21477008b702 100644
+--- a/gcc/profile-count.cc
++++ b/gcc/profile-count.cc
+@@ -557,7 +557,7 @@ profile_count::operator* (const sreal &num) const
+   sreal scaled = num * m_val;
+   gcc_checking_assert (scaled >= 0);
+   profile_count ret;
+-  if (m_val > max_count)
++  if (scaled > max_count)
+     ret.m_val = max_count;
+   else
+     ret.m_val = scaled.to_nearest_int ();
+-- 
+2.43.0
+

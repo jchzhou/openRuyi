@@ -1,0 +1,220 @@
+From 064cac730f88dc71c6da578f9ae5b8e092ab6cd4 Mon Sep 17 00:00:00 2001
+From: Jan Hubicka <hubicka@ucw.cz>
+Date: Sun, 4 May 2025 10:52:35 +0200
+Subject: [PATCH] Improve maybe_hot handling in inliner heuristics
+
+Inliner currently applies different heuristics to hot and cold calls (the
+second are inlined only if the code size will shrink).  It may happen that the
+call itself is hot, but the significant time is spent in callee and inlining
+makes it faster.  For this reason we want to check if the anticipated speedup
+is considered hot which is done by this patch (that is similar ot my earlier
+ipa-cp change).
+
+In general I think this is less important compared to ipa-cp change, since large
+benefit from inlining happens only when something useful is propagated into the
+callee and should be handled earlier by ipa-cp. However the patch improves
+SPEC2k17 imagick runtime by about 9% as discussed in PR 11900 though it is
+mostly problem of bad train data set which does not train well parts of program
+that are hot for ref data set.  As discussed in the PR log, the particular call
+that needs to be inlined has count that falls very slightly bellow the cutoff
+and scaling it up by expected savings enables inlining.
+
+gcc/ChangeLog:
+
+	PR target/119900
+	* cgraph.cc (cgraph_edge::maybe_hot_p): Add
+	a variant accepting a sreal scale; use reliability of
+	profile.
+	* cgraph.h (cgraph_edge::maybe_hot_p): Declare
+	a varaint accepting a sreal scale.
+	* ipa-inline.cc (callee_speedup): New function.
+	(want_inline_small_function_p): add early return
+	and avoid duplicated lookup of summaries; use scaled
+	maybe_hot predicate.
+---
+ gcc/cgraph.cc     | 42 ++++++++++++++++++++++++++++++++++--------
+ gcc/cgraph.h      |  9 +++++++--
+ gcc/ipa-inline.cc | 41 ++++++++++++++++++++++++++++++++---------
+ 3 files changed, 73 insertions(+), 19 deletions(-)
+
+diff --git a/gcc/cgraph.cc b/gcc/cgraph.cc
+index 6ae6a97f6f56..1a2ec38374ab 100644
+--- a/gcc/cgraph.cc
++++ b/gcc/cgraph.cc
+@@ -2984,13 +2984,22 @@ cgraph_edge::cannot_lead_to_return_p (void)
+     return callee->cannot_return_p ();
+ }
+ 
+-/* Return true if the edge may be considered hot.  */
++/* Return true if the edge after scaling it profile by SCALE
++   may be considered hot.  */
+ 
+ bool
+-cgraph_edge::maybe_hot_p (void)
++cgraph_edge::maybe_hot_p (sreal scale)
+ {
+-  if (!maybe_hot_count_p (NULL, count.ipa ()))
++  /* Never consider calls in functions optimized for size hot.  */
++  if (opt_for_fn (caller->decl, optimize_size))
+     return false;
++
++  /* If reliable IPA count is available, just use it.  */
++  profile_count c = count.ipa ();
++  if (c.reliable_p ())
++    return maybe_hot_count_p (NULL, c * scale);
++
++  /* See if we can determine hotness using caller frequency.  */
+   if (caller->frequency == NODE_FREQUENCY_UNLIKELY_EXECUTED
+       || (callee
+ 	  && callee->frequency == NODE_FREQUENCY_UNLIKELY_EXECUTED))
+@@ -2999,25 +3008,42 @@ cgraph_edge::maybe_hot_p (void)
+       && (callee
+ 	  && callee->frequency <= NODE_FREQUENCY_EXECUTED_ONCE))
+     return false;
+-  if (opt_for_fn (caller->decl, optimize_size))
+-    return false;
++  /* ??? This may make sense for hot functions determined by
++     user attribute, but if function is hot by profile, it may
++     contains non-hot calls.  In most practical cases this case
++     is handled by the reliable ipa count above, but i.e. after
++     inlining function with no profile to function with profile
++     we get here.. */
+   if (caller->frequency == NODE_FREQUENCY_HOT)
+     return true;
++
++  /* Use IPA count and if it s not available appy local heuristics.  */
++  if (c.initialized_p ())
++    return maybe_hot_count_p (NULL, c * scale);
+   if (!count.initialized_p ())
+     return true;
+   cgraph_node *where = caller->inlined_to ? caller->inlined_to : caller;
+   if (!where->count.initialized_p ())
+-    return false;
++    return true;
++  c = count * scale;
+   if (caller->frequency == NODE_FREQUENCY_EXECUTED_ONCE)
+     {
+-      if (count * 2 < where->count * 3)
++      if (c * 2 < where->count * 3)
+ 	return false;
+     }
+-  else if (count * param_hot_bb_frequency_fraction < where->count)
++  else if (c * param_hot_bb_frequency_fraction < where->count)
+     return false;
+   return true;
+ }
+ 
++/* Return true if the edge may be considered hot.  */
++
++bool
++cgraph_edge::maybe_hot_p ()
++{
++  return maybe_hot_p (1);
++}
++
+ /* Worker for cgraph_can_remove_if_no_direct_calls_p.  */
+ 
+ static bool
+diff --git a/gcc/cgraph.h b/gcc/cgraph.h
+index abde770ba2b3..f7b67ed0a6c5 100644
+--- a/gcc/cgraph.h
++++ b/gcc/cgraph.h
+@@ -1872,8 +1872,13 @@ public:
+   /* Return true when the edge represents a direct recursion.  */
+   bool recursive_p (void);
+ 
+-  /* Return true if the edge may be considered hot.  */
+-  bool maybe_hot_p (void);
++  /* Return true if the edge may be considered hot after scalling its count.  */
++  bool maybe_hot_p ();
++
++  /* Return true if the edge may be considered hot after scalling its count
++     (i.e. assume that optimization would reduce runtime for callee,
++      possibly significantly).  */
++  bool maybe_hot_p (sreal scale);
+ 
+   /* Get unique identifier of the edge.  */
+   inline int get_uid ()
+diff --git a/gcc/ipa-inline.cc b/gcc/ipa-inline.cc
+index 7c2feeeffbb6..38fdbfde1b3b 100644
+--- a/gcc/ipa-inline.cc
++++ b/gcc/ipa-inline.cc
+@@ -931,6 +931,18 @@ inlining_speedup (struct cgraph_edge *edge,
+   return speedup;
+ }
+ 
++/* Return expected speedup of the callee function alone
++   (i.e. not estimate of call overhead and also no scalling
++    by call frequency.  */
++
++static sreal
++callee_speedup (struct cgraph_edge *e)
++{
++  sreal unspec_time;
++  sreal spec_time = estimate_edge_time (e, &unspec_time);
++  return unspec_time - spec_time;
++}
++
+ /* Return true if the speedup for inlining E is bigger than
+    param_inline_min_speedup.  */
+ 
+@@ -968,28 +980,39 @@ want_inline_small_function_p (struct cgraph_edge *e, bool report)
+   if (cgraph_inline_failed_type (e->inline_failed) == CIF_FINAL_ERROR)
+     want_inline = false;
+   else if (DECL_DISREGARD_INLINE_LIMITS (callee->decl))
+-    ;
++    return true;
+   else if (!DECL_DECLARED_INLINE_P (callee->decl)
+ 	   && !opt_for_fn (e->caller->decl, flag_inline_small_functions))
+     {
+       e->inline_failed = CIF_FUNCTION_NOT_INLINE_CANDIDATE;
+       want_inline = false;
+     }
++
++  /* Early return before lookup of summaries.  */
++  if (!want_inline)
++    {
++      if (report)
++	report_inline_failed_reason (e);
++      return false;
++    }
++
++  ipa_fn_summary *callee_info = ipa_fn_summaries->get (callee);
++  ipa_call_summary *call_info = ipa_call_summaries->get (e);
++
+   /* Do fast and conservative check if the function can be good
+      inline candidate.  */
+-  else if ((!DECL_DECLARED_INLINE_P (callee->decl)
+-	   && (!e->count.ipa ().initialized_p () || !e->maybe_hot_p ()))
+-	   && ipa_fn_summaries->get (callee)->min_size
+-		- ipa_call_summaries->get (e)->call_stmt_size
+-	      > inline_insns_auto (e->caller, true, true))
++  if ((!DECL_DECLARED_INLINE_P (callee->decl)
++      && (!e->count.ipa ().initialized_p ()
++	  || !e->maybe_hot_p (callee_info->time)))
++      && callee_info->min_size - call_info->call_stmt_size
++	 > inline_insns_auto (e->caller, true, true))
+     {
+       e->inline_failed = CIF_MAX_INLINE_INSNS_AUTO_LIMIT;
+       want_inline = false;
+     }
+   else if ((DECL_DECLARED_INLINE_P (callee->decl)
+ 	    || e->count.ipa ().nonzero_p ())
+-	   && ipa_fn_summaries->get (callee)->min_size
+-		- ipa_call_summaries->get (e)->call_stmt_size
++	   && callee_info->min_size - call_info->call_stmt_size
+ 	      > inline_insns_single (e->caller, true, true))
+     {
+       e->inline_failed = (DECL_DECLARED_INLINE_P (callee->decl)
+@@ -1060,7 +1083,7 @@ want_inline_small_function_p (struct cgraph_edge *e, bool report)
+  	    }
+ 	}
+       /* If call is cold, do not inline when function body would grow. */
+-      else if (!e->maybe_hot_p ()
++      else if (!e->maybe_hot_p (callee_speedup (e))
+ 	       && (growth >= inline_insns_single (e->caller, false, false)
+ 		   || growth_positive_p (callee, e, growth)))
+ 	{
+-- 
+2.43.0
+
