@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,10 +12,11 @@ Release:        %autorelease
 Summary:        Non-interactive SSH authentication utility
 License:        GPL-2.0-or-later
 URL:            http://sshpass.sourceforge.net/
+VCS:            svn:https://svn.code.sf.net/p/sshpass/code/trunk
 #!RemoteAsset
 Source0:        https://downloads.sourceforge.net/project/sshpass/sshpass/1.10/sshpass-1.10.tar.gz
-
 BuildSystem:    autotools
+
 BuildRequires:  gcc
 
 %description
