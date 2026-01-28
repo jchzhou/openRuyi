@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,12 +16,13 @@ URL:            https://github.com/Distrotech/xmltoman
 Source:         https://github.com/Distrotech/xmltoman/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(build):   PREFIX="%{_prefix}"
-BuildOption(install): PREFIX="%{_prefix}"
+BuildOption(build):  PREFIX="%{_prefix}"
+BuildOption(install):  PREFIX="%{_prefix}"
 
 BuildRequires:  perl(XML::Parser)
-Requires:       perl(XML::Parser)
 BuildRequires:  make
+
+Requires:       perl(XML::Parser)
 
 %description
 xmltoman and xmlmantohtml are two very simple scripts for converting XML
