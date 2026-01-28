@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Ruoqing He <heruoqing@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -25,9 +26,14 @@ Source0:        https://static.rust-lang.org/dist/rust-%{version}-riscv64gc-unkn
 Source1:        https://static.rust-lang.org/dist/rust-%{version}-x86_64-unknown-linux-gnu.tar.gz
 ExclusiveArch:  riscv64 x86_64
 
-BuildRequires:  bash, tar, gzip
-Provides:       rust = %{version}
-Provides:       cargo = %{version}
+BuildRequires:  bash
+BuildRequires:  tar
+BuildRequires:  gzip
+
+Provides:       rust = %{version}-%{release}
+Provides:       rust%{?_isa} = %{version}-%{release}
+Provides:       cargo = %{version}-%{release}
+Provides:       cargo%{?_isa} = %{version}-%{release}
 
 %description
 Rust is a systems programming language focused on three goals: safety,
