@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -43,19 +44,15 @@ BuildRequires:  pkgconfig(Qt6Gui)
 BuildRequires:  pkgconfig(Qt6Network)
 BuildRequires:  qt6-base-static >= %{version}
 BuildRequires:  qt6-base-private-devel
-BuildRequires:  qt6-declarative-devel
+BuildRequires:  pkgconfig(Qt6Quick)
 BuildRequires:  qt6-declarative-static
-BuildRequires:  qt6-quicktimeline-devel
+BuildRequires:  pkgconfig(Qt6QuickTimeline)
 BuildRequires:  pkgconfig(Qt6ShaderTools)
 %if %{with system_assimp}
 BuildRequires:  pkgconfig(assimp) >= 5.0.0
-%else
-Provides:       bundled(assimp)
 %endif
 %if %{with system_openxr}
-BuildRequires:  openxr-devel
-%else
-Provides:       bundled(openxr)
+BuildRequires:  pkgconfig(openxr)
 %endif
 
 %description
@@ -63,17 +60,17 @@ The Qt 6 Quick3D library.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(Qt6Gui)
 Requires:       qt6-quick3d
-Requires:       qt6-declarative-devel
+Requires:       pkgconfig(Qt6Quick)
 
 %description    devel
 Development files for %{name}.
 
 %package        examples
 Summary:        Programming examples for %{name}
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    examples
 Programming examples for %{name}.
