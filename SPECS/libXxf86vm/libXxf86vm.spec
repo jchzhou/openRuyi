@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Icenowy Zheng <uwu@icenowy.me>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -34,8 +35,6 @@ Requires:       pkgconfig
 
 %description    devel
 %{name} development package
-
-%ldconfig_scriptlets
 
 %files
 %license COPYING
