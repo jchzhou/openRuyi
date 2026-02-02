@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,19 +18,22 @@ URL:            https://github.com/ngtcp2/ngtcp2
 Source:         https://github.com/ngtcp2/ngtcp2/releases/download/v%{version}/ngtcp2-%{version}.tar.xz
 BuildSystem:    autotools
 
-BuildOption(conf): --with-gnutls
-BuildOption(conf): --with-openssl
-BuildOption(conf): --with-libev
-BuildOption(conf): --disable-static
-BuildOption(conf): --enable-werror
+BuildOption(conf):  --with-gnutls
+BuildOption(conf):  --with-openssl
+BuildOption(conf):  --with-libev
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --enable-werror
 %if %{without doc}
-BuildOption(conf): --disable-docs
+BuildOption(conf):  --disable-docs
 %endif
 
-BuildRequires:  autoconf gcc make libtool
+BuildRequires:  autoconf
+BuildRequires:  gcc
+BuildRequires:  make
+BuildRequires:  libtool
 BuildRequires:  pkgconfig(libev)
-BuildRequires:  gnutls-devel >= 3.7.5
-BuildRequires:  openssl-devel >= 3.5.0
+BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(openssl)
 %if %{with doc}
 BuildRequires:  python3-sphinx
 BuildRequires:  python3-sphinx_rtd_theme
@@ -39,45 +43,45 @@ BuildRequires:  python3-sphinx_rtd_theme
 "Call it TCP/2. One More Time."
 ngtcp2 project is an effort to implement RFC9000 QUIC protocol.
 
-%package devel
+%package        devel
 Summary:        The ngtcp2 development files
-Requires:       %{name} = %{version}
-Recommends:     %{name}-crypto-gnutls-devel = %{version}
-Recommends:     %{name}-crypto-ossl-devel = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Recommends:     %{name}-crypto-gnutls-devel = %{version}-%{release}
+Recommends:     %{name}-crypto-ossl-devel = %{version}-%{release}
 
-%description devel
+%description    devel
 Development headers and libraries for the ngtcp2 QUIC protocol implementation.
 
-%package crypto-gnutls
+%package        crypto-gnutls
 Summary:        The ngtcp2 GnuTLS crypto backend
-Requires:       %{name} = %{version}
+Requires:       %{name} = %{version}-%{release}
 
-%description crypto-gnutls
+%description    crypto-gnutls
 GnuTLS crypto backend for the ngtcp2 QUIC protocol implementation.
 
-%package crypto-gnutls-devel
+%package        crypto-gnutls-devel
 Summary:        Development files for the ngtcp2 GnuTLS crypto backend
-Requires:       %{name}-devel = %{version}
-Requires:       %{name}-crypto-gnutls = %{version}
-Requires:       gnutls-devel >= 3.7.5
+Requires:       %{name}-devel = %{version}-%{release}
+Requires:       %{name}-crypto-gnutls = %{version}-%{release}
+Requires:       pkgconfig(gnutls)
 
-%description crypto-gnutls-devel
+%description    crypto-gnutls-devel
 Development files for the GnuTLS crypto backend for ngtcp2.
 
-%package crypto-ossl
+%package        crypto-ossl
 Summary:        The ngtcp2 OpenSSL crypto backend
-Requires:       %{name} = %{version}
+Requires:       %{name} = %{version}-%{release}
 
-%description crypto-ossl
+%description    crypto-ossl
 OpenSSL crypto backend for the ngtcp2 QUIC protocol implementation.
 
-%package crypto-ossl-devel
+%package        crypto-ossl-devel
 Summary:        Development files for the ngtcp2 OpenSSL crypto backend
-Requires:       %{name}-devel = %{version}
-Requires:       %{name}-crypto-ossl = %{version}
-Requires:       openssl-devel >= 3.5.0
+Requires:       %{name}-devel = %{version}-%{release}
+Requires:       %{name}-crypto-ossl = %{version}-%{release}
+Requires:       pkgconfig(openssl)
 
-%description crypto-ossl-devel
+%description    crypto-ossl-devel
 Development files for the OpenSSL crypto backend for ngtcp2.
 
 %conf -p
