@@ -21,16 +21,14 @@ BuildSystem:    cmake
 BuildOption(conf):  -DQT_MAJOR_VERSION=6
 
 BuildRequires:  cmake
-BuildRequires:  kf6-filesystem
+BuildRequires:  kf6-rpm-macros
 BuildRequires:  gcc-c++
-BuildRequires:  gcc-PIE
 BuildRequires:  qt6-base
 # BuildRequires:  python-sphinx
 
 Requires:       gcc-c++
-Requires:       gcc-PIE
 Requires:       cmake
-Requires:       kf6-filesystem
+Requires:       kf6-rpm-macros
 
 Provides:       extra-cmake-modules = %{version}
 
