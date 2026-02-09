@@ -12,7 +12,7 @@ if posix.stat(rpm.expand('%{SOURCE0}')) then
 end
 }
 
-Name:           kf6-filesystem
+Name:           kf6-rpm-macros
 Version:        20251125
 Release:        %autorelease
 Summary:        RPM macros for KDE packages using Qt6
