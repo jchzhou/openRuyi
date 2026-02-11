@@ -26,6 +26,12 @@ repos:
        entry: '%changelog\s+%\{\?autochangelog\}'
        args: ["--negate", "--multiline"]
        files: \.spec$
+    -  id: format-spacing
+       name: "Check format spacing"
+       language: pygrep
+       entry: '^(((BuildOption\(.*\)|BuildRequires):(?! {2}))|(%files {2,}(?=\S)))'
+       args: []
+       files: \.spec$
     -  id: sourcewithRemoteAsset
        name: "check Source with #!RemoteAsset"
        language: python
