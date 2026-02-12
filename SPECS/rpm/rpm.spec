@@ -386,8 +386,8 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}%{_prefix}/lib/rpm/macros
 %ifarch aarch64 ppc64le riscv64 loongarch64
 %{_prefix}/lib/rpm/config.guess
 %{_prefix}/lib/rpm/config.sub
-%{_libdir}/librpmbuild.so.*
 %endif
+%{_libdir}/librpmbuild.so.*
 
 %files devel
 %defattr(644,root,root,755)
