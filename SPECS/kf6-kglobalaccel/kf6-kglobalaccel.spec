@@ -17,7 +17,7 @@ Summary:        Global desktop keyboard shortcuts
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kglobalaccel
-#!RemoteAsset:
+#!RemoteAsset:  sha256:332e3be3d0ac2aec8e786419c1e875a1b33ae84b8aada3283639deccc6ffd4d8
 Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
 
 BuildRequires:  fdupes
