@@ -14,14 +14,19 @@ License:        Apache-2.0
 URL:            https://github.com/BLAKE3-team/BLAKE3
 #!RemoteAsset
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-# tbb is not enabled, will be supported in the future
 BuildSystem:    cmake
 
+# Add support for RISC-V V extension
+# see https://github.com/BLAKE3-team/BLAKE3/pull/542
+Patch0:         riscv-v.patch
+
 BuildOption(conf):  -S c
+BuildOption(conf):  -DBLAKE3_USE_TBB=ON
 
 BuildRequires:  cmake
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
+BuildRequires:  pkgconfig(tbb)
 
 %description
 BLAKE3 is a cryptographic hash function that is:
