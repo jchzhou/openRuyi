@@ -9,7 +9,7 @@
 %define real_version 6.10.1
 %define short_version 6.10
 
-Name:           qt6-serialport
+Name:           qt6-qtserialport
 Version:        6.10.1
 Release:        %autorelease
 Summary:        Qt6 - SerialPort component
