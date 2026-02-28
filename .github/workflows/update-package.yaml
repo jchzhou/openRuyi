@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+name: update package to obs
+on:
+  push:
+    branches: [main]
+    paths:
+     - 'SPECS/**'
+jobs:
+  build:
+    runs_on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: setup osc repo
+      run: |
+        echo "deb http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/ /" | sudo tee /etc/apt/sources.list.d/obs.list
+        wget -qO - http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/Release.key | sudo apt-key add -
+    - name: install tools
+      run:  sudo apt update && sudo apt install osc obs-build libwww-perl libxml-parser-perl -y
+    - name: setup osc setting
+      run: |
+        set -x
+        mkdir -p ~/.config/osc
+        cat > ~/.config/osc/oscrc <<EOF
+        [general]
+        apiurl = https://pickaxe.oerv.ac.cn
+        [https://pickaxe.oerv.ac.cn]
+        pass = ${{ secrets.BOT }}
+        user = a-bot
+        credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManager
+        EOF
+    - name: run script
+      run: |
+        ./scripts/update-package ${{ github.event.before }} ${{ github.sha }}

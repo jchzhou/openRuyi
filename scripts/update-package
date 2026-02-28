@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# set -x
+export REPO=openruyi
+export OSC="$DRYRUN osc"
+export BEFORE_COMMIT=$1
+export AFTER_COMMIT=$2
+for I in $(git diff --no-renames --name-only $BEFORE_COMMIT..$AFTER_COMMIT --diff-filter=A -- SPECS/ | grep .spec$ | awk -F/ '!seen[$0]++')
+do
+P=$(dirname $I)
+PKG=$(basename $P)
+echo "do Add type change $P $PKG"
+$OSC api -X PUT /source/$REPO/$PKG/_meta -d "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<package name=\"$PKG\" project=\"$REPO\">
+<title/>
+<description/>
+</package>
+"
+$OSC api -X PUT /source/$REPO/$PKG/_service -d \
+"<services>
+    <service name=\"obs_scm\" mode=\"trylocal\">
+      <param name=\"scm\">git</param>
+      <param name=\"url\">ssh://git@git.openruyi.cn:54865/openRuyi/openruyi-repo.git</param>
+      <param name=\"revision\">main</param>
+      <param name=\"exclude\">*</param>
+      <param name=\"extract\">$P/*</param>
+    </service>
+  <service name=\"download_assets\" mode=\"trylocal\"></service>
+</services>
+"
+done
+
+for I in $(git diff --no-renames --name-only $BEFORE_COMMIT..$AFTER_COMMIT --diff-filter=M -- SPECS/| awk -F/ '!seen[$0]++')
+do
+P=$(dirname $I)
+PKG=$(basename $P)
+echo "do Modify type change $P $PKG"
+$OSC service rr $REPO $PKG
+done
+
+
+for I in $(git diff --no-renames --name-only $BEFORE_COMMIT..$AFTER_COMMIT --diff-filter=D -- SPECS/|grep .spec$ | awk -F/ '!seen[$0]++')
+do
+P=$(dirname $I)
+PKG=$(basename $P)
+echo "do Delete type change $P $PKG"
+echo "<package name=\"$PKG\" project=\"$REPO\">
+  <title/>
+  <description/>
+  <build>
+    <disable/>
+  </build>
+  <publish>
+    <disable/>
+  </publish>
+  <useforbuild>
+    <disable/>
+  </useforbuild>
+</package>" | $OSC meta pkg $REPO $PKG -F -
+done
