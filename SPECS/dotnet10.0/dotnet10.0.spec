@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: gns <wangbingzhen.riscv@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
@@ -190,26 +190,6 @@ Requires:       dotnet-hostfxr-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{r
 # libicu is dlopen()ed
 Requires:       icu
 Conflicts:      dotnet-runtime-%{dotnet_major}-bin
-%if %{use_bundled_brotli}
-# See: src/runtime/src/native/external/brotli-version.txt
-Provides:       bundled(brotli) = 1.1.0
-%endif
-%if %{use_bundled_libunwind}
-# See: src/runtime/src/native/external/libunwind-version.txt
-Provides:       bundled(libunwind) = 1.8.0
-%endif
-%if %{use_bundled_llvm_libunwind}
-# See: src/runtime/src/native/external/llvm-libunwind-version.txt
-Provides:       bundled(llvm-libunwind) = 20.1.0
-%endif
-%if %{use_bundled_rapidjson}
-# See: src/runtime/src/native/external/rapidjson-version.txt
-Provides:       bundled(rapidjson) = 24b5e7a8b27f42fa16b96fc70aade9106cf7102f
-%endif
-%if %{use_bundled_zlib}
-# See: src/runtime/src/native/external/zlib-ng-version.txt
-Provides:       bundled(zlib-ng) = 2.2.5
-%endif
 
 %description -n dotnet-runtime-%{dotnet_major}
 The .NET runtime contains everything needed to run .NET applications.
@@ -603,7 +583,6 @@ rm %{buildroot}%{_libdir}/dotnet/dotnet
 %endif
 
 %check
-
 %if %{dotnet_is_latest}
 %{buildroot}%{_libdir}/dotnet/dotnet --info
 %{buildroot}%{_libdir}/dotnet/dotnet --version
