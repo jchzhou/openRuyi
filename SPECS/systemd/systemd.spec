@@ -453,6 +453,9 @@ VMLINUX_H_PATH=$(%python3 -c '%find_vmlinux_h')
 cp %{_vpath_builddir}/src/rpm/triggers.systemd.sh %{specpartsdir}/triggers.specpart
 
 %install -a
+# ship default policy to leave services disabled
+echo 'disable *' > %{buildroot}%{pkgdir}/system-preset/99-default.preset
+
 # Compatiblity and documentation files
 touch %{buildroot}/etc/crypttab
 chmod 600 %{buildroot}/etc/crypttab
