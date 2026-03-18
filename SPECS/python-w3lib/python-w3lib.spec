@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/scrapy/w3lib
 #!RemoteAsset:  sha256:5c8ac02a3027576174c2b61eb9a2170ba1b197cae767080771b6f1febda249a4
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
