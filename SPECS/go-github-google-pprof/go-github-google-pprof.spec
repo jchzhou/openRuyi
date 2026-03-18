@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global __elf_exclude_path (%{__elf_exclude_path}|^%{go_sys_gopath})
 %define _name           pprof
 %define go_import_path  github.com/google/pprof
 # Upstream does not provide git tags, use commit ID instead - Julian
