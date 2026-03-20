@@ -5,9 +5,6 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# libmariadbd soname (embedded library)
-%define soname 19
-
 # Mroonga and RocksDB are available only for x86_64 architecture
 # see https://mariadb.com/kb/en/mariadb/about-mroonga/ and
 # https://mariadb.com/kb/en/library/myrocks-supported-platforms/
@@ -25,7 +22,7 @@
 %define srcdir %{_builddir}/%{name}-%{version}
 
 Name:           mariadb
-Version:        11.8.3
+Version:        11.8.6
 Release:        %autorelease
 Summary:        Server part of MariaDB
 License:        GPL-2.0-only
@@ -51,6 +48,7 @@ BuildOption(conf):  -DWITH_ZLIB=system
 BuildOption(conf):  -DWITH_JEMALLOC=no
 BuildOption(conf):  -DWITH_READLINE=OFF
 BuildOption(conf):  -DINSTALL_LAYOUT=RPM
+BuildOption(conf):  -DINSTALL_SBINDIR="$(basename %{_sbindir})"
 BuildOption(conf):  -DWITH_LZ4=system
 BuildOption(conf):  -DMYSQL_UNIX_ADDR="%{_rundir}/mysql/mysql.sock"
 BuildOption(conf):  -DINSTALL_UNIX_ADDRDIR="%{_rundir}/mysql/mysql.sock"
