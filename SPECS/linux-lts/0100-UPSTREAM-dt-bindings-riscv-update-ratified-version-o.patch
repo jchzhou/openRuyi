@@ -1,7 +1,7 @@
-From 76e35b8f0a4025015f75a1c5501635c339dc6e55 Mon Sep 17 00:00:00 2001
+From 048de00f25f8df3a98bb5cbc5794133b959baed6 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 25 Dec 2025 14:24:20 +0800
-Subject: [PATCH 100/276] UPSTREAM: dt-bindings: riscv: update ratified version
+Subject: [PATCH 100/292] UPSTREAM: dt-bindings: riscv: update ratified version
  of h, svinval, svnapot, svpbmt
 
 The descriptions for h, svinval, svnapot, and svpbmt extensions currently

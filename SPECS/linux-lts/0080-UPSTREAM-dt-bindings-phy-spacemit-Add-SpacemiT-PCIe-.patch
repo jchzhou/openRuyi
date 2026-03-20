@@ -1,7 +1,7 @@
-From 6a6e9318b8965c984263dfc9a74e6412f4b01062 Mon Sep 17 00:00:00 2001
+From b53b3319d0c14f09d87c9dbebd7013e72e9d6aa3 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:27 -0600
-Subject: [PATCH 080/276] UPSTREAM: dt-bindings: phy: spacemit: Add SpacemiT
+Subject: [PATCH 080/292] UPSTREAM: dt-bindings: phy: spacemit: Add SpacemiT
  PCIe/combo PHY
 
 Add the Device Tree binding for the PCIe/USB 3.0 combo PHY found in

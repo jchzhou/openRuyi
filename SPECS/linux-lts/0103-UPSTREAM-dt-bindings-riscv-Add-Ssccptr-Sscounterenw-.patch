@@ -1,7 +1,7 @@
-From 6d2257d89fc34513992260c8622413bdd8b67162 Mon Sep 17 00:00:00 2001
+From f3e7aadab3a841237107252f732e19a398632e3d Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:20 +0800
-Subject: [PATCH 103/276] UPSTREAM: dt-bindings: riscv: Add Ssccptr,
+Subject: [PATCH 103/292] UPSTREAM: dt-bindings: riscv: Add Ssccptr,
  Sscounterenw, Sstvala, Sstvecd, Ssu64xl
 
 Add descriptions for five new extensions: Ssccptr, Sscounterenw, Sstvala,

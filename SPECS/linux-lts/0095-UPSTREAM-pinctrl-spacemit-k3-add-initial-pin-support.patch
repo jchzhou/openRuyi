@@ -1,7 +1,7 @@
-From d16d5f810e1986176892f5bff3099cefa6f4e353 Mon Sep 17 00:00:00 2001
+From 30fbf786ea1b027c08a987dd666464c5b4993631 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:24 +0800
-Subject: [PATCH 095/276] UPSTREAM: pinctrl: spacemit: k3: add initial pin
+Subject: [PATCH 095/292] UPSTREAM: pinctrl: spacemit: k3: add initial pin
  support
 
 For the pinctrl IP of SpacemiT's K3 SoC, it has different register offset

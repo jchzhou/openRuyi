@@ -1,7 +1,7 @@
-From 1afcc37bb2ae6e9a023fad269a494d1f128674d6 Mon Sep 17 00:00:00 2001
+From 39fdec0dd4cf5b0166dcc17f19ee7ef510144706 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:42 +0800
-Subject: [PATCH 109/276] UPSTREAM: dt-bindings: interrupt-controller: add
+Subject: [PATCH 109/292] UPSTREAM: dt-bindings: interrupt-controller: add
  SpacemiT K3 APLIC
 
 Add compatible string for SpacemiT K3 APLIC.

@@ -1,7 +1,7 @@
-From 4c3681507eb571e854963499ba4aa856ad5bb980 Mon Sep 17 00:00:00 2001
+From 34a67dfd9b49a52b16fa6f1632d5f499843af5c7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:23 +0800
-Subject: [PATCH 094/276] UPSTREAM: dt-bindings: pinctrl: spacemit: add K3 SoC
+Subject: [PATCH 094/292] UPSTREAM: dt-bindings: pinctrl: spacemit: add K3 SoC
  support
 
 Add new compatible string for SpacemiT K3 SoC, the pinctrl IP shares

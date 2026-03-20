@@ -1,7 +1,7 @@
-From d6701f2d49077b3964f506b0bd10b3b8ac43ff3a Mon Sep 17 00:00:00 2001
+From ae60101edf90a6163896996c935544a5da51a6ed Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:09 +0800
-Subject: [PATCH 073/276] UPSTREAM: ALSA: hda/intel: Make MSI address limit
+Subject: [PATCH 073/292] UPSTREAM: ALSA: hda/intel: Make MSI address limit
  based on the device DMA limit
 
 The hda/intel driver restricts the MSI message address for devices which do

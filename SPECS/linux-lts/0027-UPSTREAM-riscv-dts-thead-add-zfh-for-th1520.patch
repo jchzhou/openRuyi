@@ -1,7 +1,7 @@
-From 803ef64b3e4952223b2b4a8babd2b63fc47ce141 Mon Sep 17 00:00:00 2001
+From 072835207f8a5db090437ff57b2bbdc4ca8255f8 Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:49 +0800
-Subject: [PATCH 027/276] UPSTREAM: riscv: dts: thead: add zfh for th1520
+Subject: [PATCH 027/292] UPSTREAM: riscv: dts: thead: add zfh for th1520
 
 th1520 support Zfh ISA extension.
 It supports the same RISC-V extensions as SG2042.

@@ -1,7 +1,7 @@
-From c9c36c68f97ddcc01d639b405a8c1204e7d82fe1 Mon Sep 17 00:00:00 2001
+From 8255eb0ad3446943b577a4d6716be0f608d72f17 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:49 +0800
-Subject: [PATCH 124/276] UPSTREAM: dt-bindings: soc: spacemit: Add K3 reset
+Subject: [PATCH 124/292] UPSTREAM: dt-bindings: soc: spacemit: Add K3 reset
  support and IDs
 
 Update the spacemit,k1-syscon.yaml binding to document K3 SoC reset

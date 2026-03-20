@@ -1,7 +1,7 @@
-From a0550d9c7db726c30e2df83e03d749d5d29a355b Mon Sep 17 00:00:00 2001
+From 93218df82001db2449a4d1d947aa23228c2484ad Mon Sep 17 00:00:00 2001
 From: Samuel Holland <samuel.holland@sifive.com>
 Date: Fri, 9 Jan 2026 19:34:30 +0800
-Subject: [PATCH 144/276] UPSTREAM: PCI: dwc: Use multiple iATU windows for
+Subject: [PATCH 144/292] UPSTREAM: PCI: dwc: Use multiple iATU windows for
  mapping large bridge windows and DMA ranges
 
 The DWC driver tries to use a single iATU region for mapping the individual

@@ -1,7 +1,7 @@
-From 79f17d354c1fc4ccc7fbdcaaacc8ee94d848f76e Mon Sep 17 00:00:00 2001
+From 1fb3eaae42030929e074d8525f64b70b6182ba49 Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:53 +0800
-Subject: [PATCH 087/276] UPSTREAM: riscv: dts: spacemit: add reset property
+Subject: [PATCH 087/292] UPSTREAM: riscv: dts: spacemit: add reset property
 
 Add resets property to K1 I2C node.
 

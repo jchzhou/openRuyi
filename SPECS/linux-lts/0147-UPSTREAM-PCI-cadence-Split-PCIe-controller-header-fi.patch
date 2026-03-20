@@ -1,7 +1,7 @@
-From c873e3f3ffb9196ed9b84c5f1f66b753130e9b35 Mon Sep 17 00:00:00 2001
+From 896396e10ca151141f10473288a458732b9b053c Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:57 +0800
-Subject: [PATCH 147/276] UPSTREAM: PCI: cadence: Split PCIe controller header
+Subject: [PATCH 147/292] UPSTREAM: PCI: cadence: Split PCIe controller header
  file
 
 Split the Cadence PCIe header file by moving the Legacy (LGA) controller

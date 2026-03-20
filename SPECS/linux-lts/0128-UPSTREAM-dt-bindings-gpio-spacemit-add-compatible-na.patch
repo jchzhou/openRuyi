@@ -1,7 +1,7 @@
-From 8d9d5c45df9bd941cc1ba1d75a6b073a329f4b52 Mon Sep 17 00:00:00 2001
+From 5c521e893b2aab5767fea0104b0408f230b4ca0e Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 6 Jan 2026 11:09:32 +0800
-Subject: [PATCH 128/276] UPSTREAM: dt-bindings: gpio: spacemit: add compatible
+Subject: [PATCH 128/292] UPSTREAM: dt-bindings: gpio: spacemit: add compatible
  name for K3 SoC
 
 Add new compatible string for SpacemiT K3 SoC's GPIO controller.
