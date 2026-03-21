@@ -17,16 +17,16 @@
 %define systemd_svcs zfs-import-cache.service zfs-import-scan.service zfs-mount.service zfs-mount@.service zfs-share.service zfs-zed.service zfs.target zfs-import.target zfs-volume-wait.service zfs-volumes.target
 
 Name:           zfs-utils
-Version:        2.4.0
+Version:        2.4.1
 Release:        %autorelease
 Summary:        Commands to control the kernel modules and libraries
 License:        CDDL
 URL:            https://github.com/openzfs/zfs
 #!RemoteAsset
-Source0:        https://github.com/openzfs/zfs/releases/download/zfs-%{version}-rc3/zfs-%{version}-rc3.tar.gz
+Source0:        https://github.com/openzfs/zfs/releases/download/zfs-%{version}/zfs-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(prep):  -n zfs-%{version}-rc3
+BuildOption(prep):  -n zfs-%{version}
 BuildOption(conf):  --with-config=user
 BuildOption(conf):  --with-udevdir=%{_udevdir}
 BuildOption(conf):  --with-udevruledir=%{_udevruledir}
@@ -63,7 +63,7 @@ Requires:       openssl
 Requires:       util-linux
 Requires:       sysstat
 Requires:       zfs-libs%{?_isa} = %{version}-%{release}
-Requires:       %{name}-kmod = %{version}-%{release}
+Requires:       zfs-kmod = %{version}
 
 %description
 This package contains the core ZFS command line utilities.

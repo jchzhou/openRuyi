@@ -12,13 +12,13 @@
 %define mkconf  scripts/dkms.mkconf
 
 Name:           %{module}-dkms
-Version:        2.4.0
+Version:        2.4.1
 Release:        %autorelease
 Summary:        Kernel module(s) (dkms)
 License:        CDDL
 URL:            https://github.com/openzfs/zfs
 #!RemoteAsset
-Source0:        https://github.com/openzfs/zfs/releases/download/zfs-%{version}-rc3/zfs-%{version}-rc3.tar.gz
+Source0:        https://github.com/openzfs/zfs/releases/download/zfs-%{version}/zfs-%{version}.tar.gz
 BuildArch:      noarch
 
 Requires:       dkms >= 2.2.0.3
@@ -28,7 +28,7 @@ Requires:       perl
 Requires:       diffutils
 Requires:       linux-devel
 
-Provides:       %{module}-kmod = %{version}-%{release}
+Provides:       %{module}-kmod = %{version}
 
 AutoReqProv:    no
 
@@ -36,14 +36,14 @@ AutoReqProv:    no
 This package contains the dkms ZFS kernel modules.
 
 %prep
-%autosetup -n zfs-%{version}-rc3
+%autosetup -n zfs-%{version}
 
 %build
 %{mkconf} -n %{module} -v %{version} -f dkms.conf
 
 %install
 mkdir -p $RPM_BUILD_ROOT/%{_usrsrc}
-cp -rf ${RPM_BUILD_DIR}/%{module}-%{version}-rc3 $RPM_BUILD_ROOT/%{_usrsrc}/%{module}-%{version}
+cp -rf ${RPM_BUILD_DIR}/%{module}-%{version} $RPM_BUILD_ROOT/%{_usrsrc}/%{module}-%{version}
 
 %files
 %{_usrsrc}/%{module}-%{version}
