@@ -42,7 +42,7 @@ BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  gettext-devel
 
-Requires:       ding-lib
+Requires:       ding-libs
 
 %description
 A proxy for GSSAPI credential handling.
