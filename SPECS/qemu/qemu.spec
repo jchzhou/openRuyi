@@ -75,7 +75,7 @@
 %bcond have_sdl_image 0
 %bcond have_opengl 0
 %bcond have_egl 0
-%bcond have_gtk3 0
+%bcond have_gtk3 1
 
 # openRuyi: persistent memory not supported yet
 %bcond have_pmem 0
@@ -102,10 +102,10 @@
 %bcond have_multipath 0
 
 # openRuyi: QEMU USB not supported yet
-%bcond have_usb 0
+%bcond have_usb 1
 
 # openRuyi: QEMU usbredir not supported yet
-%bcond have_usbredir 0
+%bcond have_usbredir 1
 
 # openRuyi: XDP network backend not supported yet
 %bcond have_xdp 0
@@ -117,7 +117,7 @@
 %bcond have_capstone 0
 
 # openRuyi: QEMU pipewire not supported yet
-%bcond have_pipewire 0
+%bcond have_pipewire 1
 
 # openRuyi: QEMU keymap not supported yet
 %bcond have_cryptodev_backend_lkcf 0
@@ -131,13 +131,10 @@
 %bcond have_slirp 1
 
 # openRuyi: QEMU Audio support not ready yet
-%bcond have_audio 0
+%bcond have_audio 1
 
 # openRuyi: QEMU dwarf not supported yet
 %bcond have_dwarf 0
-
-# openRuyi: QEMU USB support not ready yet
-%bcond have_usb 0
 
 # All modules should be listed here.
 %bcond have_block_rbd 1
