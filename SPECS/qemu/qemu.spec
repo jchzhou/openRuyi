@@ -105,7 +105,7 @@
 %bcond have_usb 1
 
 # openRuyi: QEMU usbredir not supported yet
-%bcond have_usbredir 1
+%bcond have_usbredir 0
 
 # openRuyi: XDP network backend not supported yet
 %bcond have_xdp 0
@@ -117,7 +117,7 @@
 %bcond have_capstone 0
 
 # openRuyi: QEMU pipewire not supported yet
-%bcond have_pipewire 1
+%bcond have_pipewire 0
 
 # openRuyi: QEMU keymap not supported yet
 %bcond have_cryptodev_backend_lkcf 0
