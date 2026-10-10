@@ -18,8 +18,8 @@ VCS:            git:https://gitlab.freedesktop.org/virgl/virglrenderer.git
 Source0:        https://gitlab.freedesktop.org/virgl/%{name}/-/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
-# TEMPORARY debug patch: log which step of virgl_egl_init() fails in the
-# build root. Remove once the test failure is understood.
+# TEMPORARY debug patch: print the inputs that make virgl_egl_init() bail
+# out at its first check. Remove once the test failure is understood.
 Patch1:         2001-vrend-egl-init-debug.patch
 
 BuildOption(conf):  -Ddrm-renderers=amdgpu-experimental,panfrost-experimental,asahi,msm,i915-experimental
