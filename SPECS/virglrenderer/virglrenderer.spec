@@ -4,8 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# needing drm devices in the building environment to test it
-%bcond tests 0
+# test with llvmpipe
+%bcond tests 1
 
 Name:           virglrenderer
 Version:        1.3.0
@@ -41,7 +41,7 @@ BuildRequires:  pkgconfig(x11)
 BuildRequires:  python3dist(pyyaml)
 %if %{with tests}
 BuildRequires:  pkgconfig(check)
-# libglvnd [pkgconfig(egl)] alone provides no vendor, needing a working EGL driver
+BuildRequires:  mesa-dril
 BuildRequires:  mesa-gl
 %endif
 
@@ -79,7 +79,11 @@ without a compositor or a display server.
 %check
 %if %{with tests}
 # for headless environment
-LIBGL_ALWAYS_SOFTWARE=1 VRENDTEST_USE_EGL_SURFACELESS=1 %meson_test
+GALLIUM_DRIVER=llvmpipe \
+LIBGL_ALWAYS_SOFTWARE=1 \
+LIBGL_DEBUG=verbose \
+EGL_LOG_LEVEL=debug \
+VRENDTEST_USE_EGL_SURFACELESS=1 %meson_test
 %endif
 
 %files
