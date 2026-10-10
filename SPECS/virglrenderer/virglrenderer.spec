@@ -18,10 +18,6 @@ VCS:            git:https://gitlab.freedesktop.org/virgl/virglrenderer.git
 Source0:        https://gitlab.freedesktop.org/virgl/%{name}/-/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
-# TEMPORARY debug patch: print the inputs that make virgl_egl_init() bail
-# out at its first check. Remove once the test failure is understood.
-Patch1:         2001-vrend-egl-init-debug.patch
-
 BuildOption(conf):  -Ddrm-renderers=amdgpu-experimental,panfrost-experimental,asahi,msm,i915-experimental
 BuildOption(conf):  -Dvenus=true
 BuildOption(conf):  -Dvideo=true
@@ -45,12 +41,14 @@ BuildRequires:  pkgconfig(x11)
 BuildRequires:  python3dist(pyyaml)
 %if %{with tests}
 BuildRequires:  pkgconfig(check)
+# libglvnd [pkgconfig(egl)] is only a dispatch layer; pull in the Mesa EGL
+# vendor and the software drivers so that EGL can initialize without a GPU.
 BuildRequires:  mesa-dril
 BuildRequires:  mesa-gl
 %endif
 
 # venus (vulkan) dlopen's libvulkan
-Requires:       vulkan-loader
+Recommends:       vulkan-loader
 
 %description
 virglrenderer is a virtual 3D GPU library that allows a guest operating
@@ -82,59 +80,12 @@ without a compositor or a display server.
 
 %check
 %if %{with tests}
-# Diagnostic probe: replicate the exact eglBindAPI/eglChooseConfig/eglCreateContext
-# calls virgl_egl_init() makes, for both desktop GL and GLES. Non-fatal;
-# remove once the tests pass.
-python3 - <<'PYEOF' || :
-import ctypes
-
-epoxy = ctypes.CDLL("libepoxy.so.0")
-
-
-def epoxy_fn(sym, restype, argtypes):
-    p = ctypes.c_void_p.in_dll(epoxy, sym)
-    return ctypes.CFUNCTYPE(restype, *argtypes)(p.value)
-
-
-gpa = epoxy_fn("epoxy_eglGetProcAddress", ctypes.c_void_p, [ctypes.c_char_p])
-geterr = epoxy_fn("epoxy_eglGetError", ctypes.c_int, [])
-initialize = epoxy_fn("epoxy_eglInitialize", ctypes.c_uint, [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int)])
-bindapi = epoxy_fn("epoxy_eglBindAPI", ctypes.c_uint, [ctypes.c_uint])
-choosecfg = epoxy_fn("epoxy_eglChooseConfig", ctypes.c_uint, [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int), ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_int)])
-createctx = epoxy_fn("epoxy_eglCreateContext", ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int)])
-
-gpd = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_uint, ctypes.c_void_p, ctypes.c_void_p)(gpa(b"eglGetPlatformDisplayEXT"))
-dpy = gpd(0x31DD, None, None)  # EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY
-ma, mi = ctypes.c_int(), ctypes.c_int()
-print(f"surfaceless eglInitialize: {initialize(dpy, ctypes.byref(ma), ctypes.byref(mi))} EGL {ma.value}.{mi.value}")
-
-print(f"eglBindAPI(EGL_OPENGL_API): {bindapi(0x30A2)} err=0x{geterr():x}")
-
-
-def try_config(rt, label):
-    att = (ctypes.c_int * 13)(0x3033, 0x0001, 0x3040, rt, 0x3024, 1, 0x3023, 1, 0x3022, 1, 0x3021, 0, 0x3038)
-    cfg = ctypes.c_void_p()
-    n = ctypes.c_int(0)
-    ok = choosecfg(dpy, att, ctypes.byref(cfg), 1, ctypes.byref(n))
-    print(f"eglChooseConfig {label}: ok={ok} n={n.value} err=0x{geterr():x}")
-    return cfg, n.value
-
-
-cfg, n = try_config(0x0008, "EGL_OPENGL_BIT(0x0008)")
-if n == 1:
-    ctx_att = (ctypes.c_int * 3)(0x3098, 2, 0x3038)  # EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE
-    ctx = createctx(dpy, cfg, None, ctx_att)
-    print(f"eglCreateContext(GL): {hex(ctx) if ctx else None} err=0x{geterr():x}")
-
-try_config(0x0004, "EGL_OPENGL_ES2_BIT(0x0004)")
-PYEOF
-
-# for headless environment
-GALLIUM_DRIVER=llvmpipe \
-LIBGL_ALWAYS_SOFTWARE=1 \
-LIBGL_DEBUG=verbose \
-EGL_LOG_LEVEL=debug \
-VRENDTEST_USE_EGL_SURFACELESS=1 %meson_test
+# Note: the meson test macro expands with a leading newline, so the
+# environment must be exported rather than prefixed on the same line.
+export GALLIUM_DRIVER=llvmpipe
+export LIBGL_ALWAYS_SOFTWARE=1
+export VRENDTEST_USE_EGL_SURFACELESS=1
+%meson_test
 %endif
 
 %files
