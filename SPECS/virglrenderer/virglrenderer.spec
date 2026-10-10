@@ -78,64 +78,54 @@ without a compositor or a display server.
 
 %check
 %if %{with tests}
-# Diagnostic probe: walk the same EGL sequence that virgl_egl_init() uses so
-# we can see exactly which step fails in the build root. Non-fatal, and can be
-# removed once the tests pass.
+# Diagnostic probe: resolve the exact EGL entry points virgl_egl_get_funcs()
+# needs, both through libEGL and through libepoxy, and then run the surfaceless
+# sequence via epoxy. Non-fatal; remove once the tests pass.
 python3 - <<'PYEOF' || :
 import ctypes
 
-for lib in ("libEGL.so.1", "libEGL_mesa.so.0"):
-    try:
-        ctypes.CDLL(lib)
-        print(f"dlopen OK: {lib}")
-    except OSError as e:
-        print(f"dlopen FAILED: {lib}: {e}")
+epoxy = ctypes.CDLL("libepoxy.so.0")
+le = ctypes.CDLL("libEGL.so.1")
 
-egl = ctypes.CDLL("libEGL.so.1")
-egl.eglQueryString.restype = ctypes.c_char_p
-egl.eglGetProcAddress.restype = ctypes.c_void_p
-egl.eglGetProcAddress.argtypes = [ctypes.c_char_p]
-egl.eglGetError.restype = ctypes.c_int
-egl.eglInitialize.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int)]
-egl.eglInitialize.restype = ctypes.c_uint
-egl.eglBindAPI.argtypes = [ctypes.c_uint]
-egl.eglChooseConfig.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int), ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
-egl.eglChooseConfig.restype = ctypes.c_uint
-egl.eglCreateContext.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int)]
-egl.eglCreateContext.restype = ctypes.c_void_p
 
-cext = egl.eglQueryString(None, 0x3055) or b""
-print(f"has EGL_EXT_platform_base: {b'EGL_EXT_platform_base' in cext}")
+def epoxy_fn(sym, restype, argtypes):
+    p = ctypes.c_void_p.in_dll(epoxy, sym)
+    return ctypes.CFUNCTYPE(restype, *argtypes)(p.value)
 
-addr = egl.eglGetProcAddress(b"eglGetPlatformDisplayEXT")
-print(f"eglGetPlatformDisplayEXT: {hex(addr) if addr else None}")
+
+qstring = epoxy_fn("epoxy_eglQueryString", ctypes.c_char_p, [ctypes.c_void_p, ctypes.c_int])
+gpa = epoxy_fn("epoxy_eglGetProcAddress", ctypes.c_void_p, [ctypes.c_char_p])
+geterr = epoxy_fn("epoxy_eglGetError", ctypes.c_int, [])
+initialize = epoxy_fn("epoxy_eglInitialize", ctypes.c_uint, [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int)])
+
+le.eglGetProcAddress.restype = ctypes.c_void_p
+le.eglGetProcAddress.argtypes = [ctypes.c_char_p]
+
+cext = qstring(None, 0x3055) or b""
+for flag in (b"EGL_EXT_platform_base", b"EGL_EXT_device_query", b"EGL_EXT_device_enumeration"):
+    print(f"client has {flag.decode()}: {flag in cext}")
+
+names = (b"eglGetPlatformDisplayEXT", b"eglQueryDeviceAttribEXT", b"eglQueryDeviceStringEXT",
+         b"eglQueryDisplayAttribEXT", b"eglQueryDevicesEXT")
+for n in names:
+    print(f"{n.decode()}: libEGL={hex(le.eglGetProcAddress(n) or 0)} epoxy={hex(gpa(n) or 0)}")
+
+addr = gpa(b"eglGetPlatformDisplayEXT")
 if not addr:
     raise SystemExit(0)
-
 gpd = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_uint, ctypes.c_void_p, ctypes.c_void_p)(addr)
 dpy = gpd(0x31DD, None, None)  # EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY
-print(f"surfaceless display: {hex(dpy) if dpy else None} err=0x{egl.eglGetError():x}")
+print(f"surfaceless display: {hex(dpy) if dpy else None} err=0x{geterr():x}")
 if not dpy:
     raise SystemExit(0)
-
 ma, mi = ctypes.c_int(), ctypes.c_int()
-ok = egl.eglInitialize(dpy, ctypes.byref(ma), ctypes.byref(mi))
-print(f"eglInitialize: {ok} EGL {ma.value}.{mi.value} err=0x{egl.eglGetError():x}")
+ok = initialize(dpy, ctypes.byref(ma), ctypes.byref(mi))
+print(f"eglInitialize: {ok} EGL {ma.value}.{mi.value} err=0x{geterr():x}")
 if not ok:
     raise SystemExit(0)
-
-ok = egl.eglBindAPI(0x30A2)  # EGL_OPENGL_API
-print(f"eglBindAPI: {ok} err=0x{egl.eglGetError():x}")
-
-conf_att = (ctypes.c_int * 13)(0x3033, 0x0001, 0x3040, 0x0001, 0x3024, 1, 0x3023, 1, 0x3022, 1, 0x3021, 0, 0x3038)
-cfg = ctypes.c_void_p()
-n = ctypes.c_int(0)
-ok = egl.eglChooseConfig(dpy, conf_att, ctypes.byref(cfg), 1, ctypes.byref(n))
-print(f"eglChooseConfig: {ok} n={n.value} err=0x{egl.eglGetError():x}")
-
-ctx_att = (ctypes.c_int * 3)(0x3098, 2, 0x3038)  # EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE
-ctx = egl.eglCreateContext(dpy, cfg, None, ctx_att)
-print(f"eglCreateContext: {hex(ctx) if ctx else None} err=0x{egl.eglGetError():x}")
+dext = qstring(dpy, 0x3055) or b""
+print(f"display has EGL_KHR_surfaceless_context: {b'EGL_KHR_surfaceless_context' in dext}")
+print(f"display has EGL_KHR_create_context: {b'EGL_KHR_create_context' in dext}")
 PYEOF
 
 # for headless environment
