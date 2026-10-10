@@ -1,0 +1,78 @@
+--- a/src/vrend/vrend_winsys_egl.c
++++ b/src/vrend/vrend_winsys_egl.c
+@@ -337,6 +337,7 @@
+       conf_att[1] = EGL_PBUFFER_BIT;
+ #ifdef ENABLE_GBM
+    if (!gbm && (!surfaceless || !has_egl_base))
++   virgl_error("VEGL_FAIL 1: no gbm/surfaceless/platform_base");
+       goto fail;
+    egl->gbm = gbm;
+ #endif
+@@ -344,6 +345,7 @@
+    egl->different_gpu = false;
+    extensions = eglQueryString(NULL, EGL_EXTENSIONS);
+    if (!virgl_egl_add_extensions(egl, extensions))
++   virgl_error("VEGL_FAIL 2: add_extensions(client)");
+       goto fail;
+ 
+ #ifdef ENABLE_GBM_ALLOCATION
+@@ -353,6 +355,7 @@
+ #endif
+    if (has_egl_base) {
+       if (!has_bit(egl->extension_bits, EGL_EXT_PLATFORM_BASE))
++   virgl_error("VEGL_FAIL 3: platform_base bit");
+          goto fail;
+       if (surfaceless) {
+          egl->egl_display = egl->funcs.eglGetPlatformDisplay(EGL_PLATFORM_SURFACELESS_MESA,
+@@ -378,16 +381,19 @@
+        * can't be used.
+        */
+       if (egl->gbm && egl->gbm->fd < 0)
++   virgl_error("VEGL_FAIL 4: gbm fd");
+          goto fail;
+ #endif
+ 
+       egl->egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+       if (!egl->egl_display)
++   virgl_error("VEGL_FAIL 5: no display");
+          goto fail;
+    }
+ 
+    success = eglInitialize(egl->egl_display, &major, &minor);
+    if (!success)
++   virgl_error("VEGL_FAIL 6: eglInitialize");
+       goto fail;
+ 
+    extensions = eglQueryString(egl->egl_display, EGL_EXTENSIONS);
+@@ -401,9 +407,11 @@
+ #endif
+ 
+    if (!virgl_egl_add_extensions(egl, extensions))
++   virgl_error("VEGL_FAIL 7: add_extensions(display)");
+       goto fail;
+ 
+    if (!virgl_egl_check_extensions(egl))
++   virgl_error("VEGL_FAIL 8: check_extensions");
+       goto fail;
+ 
+    if (gles)
+@@ -412,16 +420,19 @@
+       api = EGL_OPENGL_API;
+    success = eglBindAPI(api);
+    if (!success)
++   virgl_error("VEGL_FAIL 9: eglBindAPI");
+       goto fail;
+ 
+    success = eglChooseConfig(egl->egl_display, conf_att, &egl->egl_conf,
+                              1, &num_configs);
+    if (!success || num_configs != 1)
++   virgl_error("VEGL_FAIL 10: eglChooseConfig");
+       goto fail;
+ 
+    egl->egl_ctx = eglCreateContext(egl->egl_display, egl->egl_conf, EGL_NO_CONTEXT,
+                                    ctx_att);
+    if (!egl->egl_ctx)
++   virgl_error("VEGL_FAIL 11: eglCreateContext");
+       goto fail;
+ 
+    eglMakeCurrent(egl->egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE,
