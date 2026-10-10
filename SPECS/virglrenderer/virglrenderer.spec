@@ -78,6 +78,37 @@ without a compositor or a display server.
 
 %check
 %if %{with tests}
+# Diagnostic probe: report whether the Mesa EGL vendor is usable in this build
+# root, and whether libglvnd advertises the platform extensions. This never
+# fails the build and can be removed once the tests pass.
+python3 - <<'PYEOF' || :
+import ctypes, glob
+
+
+def probe(name):
+    try:
+        ctypes.CDLL(name)
+        print(f"dlopen OK:     {name}")
+    except OSError as e:
+        print(f"dlopen FAILED: {name}: {e}")
+
+
+probe("libEGL.so.1")
+probe("libEGL_mesa.so.0")
+for pat in ("/usr/lib64/libgallium-*.so", "/usr/lib/libgallium-*.so"):
+    for path in glob.glob(pat):
+        probe(path)
+
+try:
+    egl = ctypes.CDLL("libEGL.so.1")
+    egl.eglQueryString.restype = ctypes.c_char_p
+    ext = egl.eglQueryString(None, 0x3055) or b""
+    print(f"EGL client extensions: {ext.decode('utf-8', 'replace')}")
+    print(f"has EGL_EXT_platform_base: {b'EGL_EXT_platform_base' in ext}")
+except OSError as e:
+    print(f"libEGL load failed: {e}")
+PYEOF
+
 # for headless environment
 GALLIUM_DRIVER=llvmpipe \
 LIBGL_ALWAYS_SOFTWARE=1 \
